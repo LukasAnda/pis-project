@@ -1,0 +1,9 @@
+version: '3.1'
+
+services:
+
+  app-server:
+    container_name: server-builder
+    build:
+      context: .
+      dockerfile: build-server-dockerfile
