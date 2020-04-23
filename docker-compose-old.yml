@@ -1,5 +1,7 @@
-version: '3'
+version: '3.1'
+
 services:
+
   db:
     image: postgres
     environment:
@@ -8,13 +10,13 @@ services:
       POSTGRES_DB: company
     ports:
       - 5432:5432
-  app:
-    restart: always
-    build: ./app-server
-#    working_dir: /app-server
-#    volumes:
-#      - ./app-server:/app-server
-    ports:
-      - 8080:8080
+
+  app-server:
+    container_name: server
+    image: fiit-company_app-server:latest
     depends_on:
       - db
+    links:
+      - db
+    ports:
+      - "8080:8080"
