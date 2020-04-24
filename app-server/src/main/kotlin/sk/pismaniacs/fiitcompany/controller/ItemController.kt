@@ -6,8 +6,11 @@ import org.springframework.web.bind.annotation.RestController
 import sk.pismaniacs.fiitcompany.model.Item
 import sk.pismaniacs.fiitcompany.model.Purchase
 import sk.pismaniacs.fiitcompany.repository.ItemRepository
+import sk.pismaniacs.fiitcompany.repository.NotificationRepository
 import sk.pismaniacs.fiitcompany.repository.OrderRepository
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.ZoneOffset
 import kotlin.random.Random
 
@@ -17,28 +20,16 @@ class ItemController {
     @Autowired
     lateinit var itemRepository: ItemRepository
 
-
     @Autowired
     lateinit var orderRepository: OrderRepository
 
-    @RequestMapping("/setup")
-    fun setup() = itemRepository.deleteAll()
-            .also { orderRepository.deleteAll() }
-            .let { (1..20) }
-            .map { Item("Polozka $it", Random.nextDouble(1.0, 20.0)) }
-            .also { itemRepository.saveAll(it) }
-            .map { item ->
-                (0..Random.nextInt(0, 5)).map {
-                    Purchase(
-                            item,
-                            Random.nextInt(1, 21),
-                            LocalDate.now(ZoneOffset.UTC).atStartOfDay(ZoneOffset.UTC).minusWeeks(it.toLong()).toInstant().toEpochMilli()
-                    )
-                }
-            }.flatten()
-            .also { orderRepository.saveAll(it) }
-            .let { itemRepository.findAll() }
+    @Autowired
+    lateinit var notificationRepository: NotificationRepository
 
     @RequestMapping("/all")
-    fun getAll() = itemRepository.findAll()
+    fun getAll() = itemRepository.findAll().sortedBy { it.id }
+
+    @RequestMapping("/notifications")
+    fun getNotifications() = notificationRepository.findAll()
+
 }
