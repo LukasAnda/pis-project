@@ -3,18 +3,12 @@ package sk.pismaniacs.fiitcompany.controller
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import sk.pismaniacs.fiitcompany.model.Item
-import sk.pismaniacs.fiitcompany.model.Purchase
 import sk.pismaniacs.fiitcompany.repository.ItemRepository
 import sk.pismaniacs.fiitcompany.repository.NotificationRepository
 import sk.pismaniacs.fiitcompany.repository.OrderRepository
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.ZoneOffset
-import kotlin.random.Random
-import sun.security.x509.OIDMap.addAttribute
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.PathVariable
+import sk.pismaniacs.fiitcompany.model.Season
 import sk.pismaniacs.fiitcompany.repository.SeasonRepository
 import java.util.*
 
@@ -42,13 +36,19 @@ class ItemController {
     @RequestMapping("/seasons")
     fun getSeasons() = seasonRepository.findAll()
 
-    @RequestMapping("/addSeason")
-    fun addSeason() = itemRepository.findAll()
+    @RequestMapping("/addSeason/{seasonName}")
+    fun addSeason(@PathVariable seasonName: String) = itemRepository.findAll().shuffled().take(4).let {
+        Season(seasonName, System.currentTimeMillis(), it)
+    }.let {
+        seasonRepository.save(it)
+    }.let {
+        seasonRepository.findAll()
+    }
 
     @RequestMapping("/")
     fun index(model: Model): String {
         model.addAttribute("datetime", Date())
-        model.addAttribute("username", "Kokot")
+        model.addAttribute("username", "Peder")
 
         return "index"
     }

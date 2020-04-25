@@ -15,7 +15,7 @@ data class Season(
                 inverseJoinColumns = arrayOf(JoinColumn(name = "item_id"))
         )
         @JsonIgnoreProperties("purchases", "seasons")
-        var items: MutableList<Item> = mutableListOf(),
+        var items: List<Item> = emptyList(),
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = 0
 )
