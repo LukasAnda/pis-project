@@ -14,6 +14,7 @@ import java.util.*
 
 
 @RestController
+@RequestMapping("/json")
 class ItemController {
     @Autowired
     lateinit var itemRepository: ItemRepository
@@ -37,12 +38,18 @@ class ItemController {
     fun getSeasons() = seasonRepository.findAll()
 
     @RequestMapping("/addSeason/{seasonName}")
-    fun addSeason(@PathVariable seasonName: String) = itemRepository.findAll().shuffled().take(4).let {
-        Season(seasonName, System.currentTimeMillis(), it)
-    }.let {
-        seasonRepository.save(it)
-    }.let {
-        seasonRepository.findAll()
-    }
+    fun addSeason(@PathVariable seasonName: String) = itemRepository.findAll() // Get all items
+            .shuffled()// Shuffle them
+            .take(4)// Get 4 first (guaranteed to be unique and random due to shuffle
+            .let {
+                // Map to Season
+                Season(seasonName, System.currentTimeMillis(), it)
+            }.let {
+                // Insert the season to DB
+                seasonRepository.save(it)
+            }.let {
+                // Return all seasons
+                seasonRepository.findAll()
+            }
 
 }
