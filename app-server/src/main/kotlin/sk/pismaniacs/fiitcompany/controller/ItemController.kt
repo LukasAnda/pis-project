@@ -13,9 +13,13 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZoneOffset
 import kotlin.random.Random
+import sun.security.x509.OIDMap.addAttribute
+import org.springframework.ui.Model
+import sk.pismaniacs.fiitcompany.repository.SeasonRepository
+import java.util.*
+
 
 @RestController
-@RequestMapping("/items")
 class ItemController {
     @Autowired
     lateinit var itemRepository: ItemRepository
@@ -26,10 +30,27 @@ class ItemController {
     @Autowired
     lateinit var notificationRepository: NotificationRepository
 
+    @Autowired
+    lateinit var seasonRepository: SeasonRepository
+
     @RequestMapping("/all")
     fun getAll() = itemRepository.findAll().sortedBy { it.id }
 
     @RequestMapping("/notifications")
     fun getNotifications() = notificationRepository.findAll()
+
+    @RequestMapping("/seasons")
+    fun getSeasons() = seasonRepository.findAll()
+
+    @RequestMapping("/addSeason")
+    fun addSeason() = itemRepository.findAll()
+
+    @RequestMapping("/")
+    fun index(model: Model): String {
+        model.addAttribute("datetime", Date())
+        model.addAttribute("username", "Kokot")
+
+        return "index"
+    }
 
 }

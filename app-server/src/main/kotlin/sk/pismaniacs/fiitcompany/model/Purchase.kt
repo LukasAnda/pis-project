@@ -10,7 +10,7 @@ import javax.persistence.*
 data class Purchase(
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "item_id")
-        @JsonIgnoreProperties("purchases", "notification")
+        @JsonIgnoreProperties("purchases", "seasons")
         var item: Item? = null,
         var quantity: Int = 0,
         var dateOfPurchase: Long = 0L,

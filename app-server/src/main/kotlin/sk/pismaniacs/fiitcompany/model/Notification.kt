@@ -9,7 +9,7 @@ import javax.persistence.*
 @Table(name = "notification")
 data class Notification(@OneToOne(fetch = FetchType.LAZY)
                         @JoinColumn(name = "item_id")
-                        @JsonIgnoreProperties("purchases", "notification")
+                        @JsonIgnoreProperties("purchases", "seasons")
                         var item: Item? = null,
                         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
                         var id: Long = 0)

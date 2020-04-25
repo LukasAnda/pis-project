@@ -14,9 +14,9 @@ data class Item(
         @OneToMany(mappedBy = "item", orphanRemoval = true, cascade = arrayOf(CascadeType.ALL), fetch = FetchType.LAZY)
         @JsonIgnoreProperties("item")
         var purchases: List<Purchase> = emptyList(),
-        @OneToOne(mappedBy = "item", orphanRemoval = true, cascade = arrayOf(CascadeType.ALL), fetch = FetchType.LAZY)
-        @JsonIgnoreProperties("item")
-        var notification: Notification? = null,
+        @ManyToMany(mappedBy = "items")
+        @JsonIgnoreProperties("items")
+        var seasons: List<Season> = emptyList(),
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = 0
 )
