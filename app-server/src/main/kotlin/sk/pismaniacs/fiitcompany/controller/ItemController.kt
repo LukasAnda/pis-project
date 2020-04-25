@@ -45,12 +45,4 @@ class ItemController {
         seasonRepository.findAll()
     }
 
-    @RequestMapping("/")
-    fun index(model: Model): String {
-        model.addAttribute("datetime", Date())
-        model.addAttribute("username", "Peder")
-
-        return "index"
-    }
-
 }
