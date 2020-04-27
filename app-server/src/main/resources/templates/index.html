@@ -44,18 +44,20 @@
       </div>
     </nav>
 <div class="container">
-    <!-- Static navbar -->
-    
-    <!-- Main component for a primary marketing message or call to action -->
     <div class="jumbotron">
-        <!--Usage of models we wrote in WepAppController th:text="'Welcome to basic Bootstrap with Spring Boot created by ' + ${username} -->
-        <h3 th:text="'Welcome to basic Bootstrap with Spring Boot created by ' + ${username}"></h3>
-        <p th:text="'This date example  ' + ${#dates.format(datetime, 'dd MMM yyyy HH:mm')}"></p>
-        <p> is a quick exercise to illustrate how the default, static navbar and fixed to top navbar work.
-            It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-        <p>
-            <a class="btn btn-lg btn-primary" href="#" role="button">View navbar docs &raquo;</a>
-        </p>
+        <th:block th:each="item : ${items}">
+            <div class="row">
+                <div class="col">
+                    <p th:utext="${item.id}">..</p>
+                </div>
+                <div class="col">
+                    <p th:utext="${item.name}">..</p>
+                </div>
+                <div class="col">
+                    <p th:utext="${item.price}">..</p>
+                </div>
+            </div>
+        </th:block>
     </div>
 </div> <!-- /container -->
 <!-- Bootstrap core JavaScript

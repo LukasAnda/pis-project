@@ -35,9 +35,8 @@ class WebController {
 
     @RequestMapping("/")
     fun index(model: Model): String {
-        model.addAttribute("datetime", Date())
-        model.addAttribute("username", "Peder")
         model.addAttribute("mode", appMode)
+        model.addAttribute("items", itemRepository.findAll().sortedBy { it.id })
         return "index"
     }
 
