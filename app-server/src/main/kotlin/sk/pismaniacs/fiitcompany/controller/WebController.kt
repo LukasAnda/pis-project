@@ -13,8 +13,9 @@ import sk.pismaniacs.fiitcompany.repository.SeasonRepository
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import sk.pismaniacs.fiitcompany.model.requests.DeleteRequest
-import sk.pismaniacs.fiitcompany.model.requests.DeleteResponse
+import sk.pismaniacs.fiitcompany.model.requests.ModifyRequest
+import sk.pismaniacs.fiitcompany.model.requests.ModifyRequest2
+import sk.pismaniacs.fiitcompany.model.requests.ModifyResponse
 
 
 @Controller
@@ -47,17 +48,32 @@ class WebController {
 
     @RequestMapping("/delete" , method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     @ResponseBody
-    fun checkUsername(@RequestBody request: DeleteRequest): DeleteResponse {
+    fun deleteItems(@RequestBody request: ModifyRequest): ModifyResponse {
         request.item_ids.forEach {
             itemRepository.deleteById(it.toLong())
         }
-        return DeleteResponse("PISko je picovina")
+        return ModifyResponse("PISko je picovina")
+    }
+
+    @RequestMapping("/save" , method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    @ResponseBody
+    fun saveItems(@RequestBody request: ModifyRequest2): ModifyResponse {
+        itemRepository.saveAll(request.item_ids)
+        return ModifyResponse("PISko je picovina 2")
     }
 
     @RequestMapping("/allProducts")
     fun getAllProducts(model: Model): String{
         model.addAttribute("items", itemRepository.findAll().sortedBy { it.id })
         return "edit"
+    }
+
+
+
+    @RequestMapping("/editProducts", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun editProducts(model: Model, @RequestBody request: ModifyRequest): String{
+        model.addAttribute("Moj tatko", itemRepository.findAllById(request.item_ids.map { it.toLong() }))
+        return "Tvoj tatko"
     }
 
     @RequestMapping("/actualSeason")
