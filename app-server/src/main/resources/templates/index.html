@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico"/>
+    <link rel="stylesheet" href="css/index.css">
+
+    <title>AbuyMe - All for you!</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    
+    <!-- Icons -->
+    <script src="https://kit.fontawesome.com/f89c366a91.js" crossorigin="anonymous"></script>
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">AbuyMe</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Všetky produkty</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Notifikácie</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Aktuálna sezóna</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+<div class="container">
+    <div class="jumbotron">
+        <div class="row header">
+            <div class="col-1 text-left">
+                <p>Výber</p>
+            </div>
+            <div class="col-1 text-left">
+                <p>ID</p>
+            </div>
+            <div class="col-6 text-left">
+                <p>Názov produktu</p>
+            </div>
+            <div class="col-3 text-right">
+                <p>Jednotková cena</p>
+            </div>
+            <div class="col-1 text-center">
+                <p>Vymazať</p>
+            </div>
+        </div>
+        <div class="products">
+            <th:block th:each="item : ${items}">
+                <div class="row">
+                    <div class="col-1 text-center">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    </div>
+                    <div class="col-1 text-left">
+                        <p th:utext="${item.id}">..</p>
+                    </div>
+                    <div class="col-6 text-left">
+                        <p th:utext="${item.name}">..</p>
+                    </div>
+                    <div class="col-3 text-right">
+                        <p th:utext="${item.price}">..</p>
+                    </div>
+                    <div class="col-1 text-center">
+                        <button type="submit" class="deleteBTN" onclick="confirmFunction()"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                        
+                    </div>
+                </div>
+            </th:block>
+        </div>
+        <div class="row buttons">
+            <div class="col-12 text-right">
+                <button onclick="location.href='/allProducts'" type="button" class="btn btn-primary">Editovať označené</button>
+                <button type="submit" class="btn btn-primary">Vymazať označené</button>
+            </div>
+        </div>
+    </div>
+</div> <!-- /container -->
+
+<script>
+function confirmFunction() {
+  var txt;
+  var r = confirm("Naozaj si prajete vymazať vybraný produkt?");
+  if (r == true) {
+    txt = "You pressed OK!";
+  } else {
+    txt = "You pressed Cancel!";
+  }
+}
+</script>
+
+
+
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="../static/js/bootstrap.js" th:href="@{/js/bootstrap.js}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+</body>
+</html>
