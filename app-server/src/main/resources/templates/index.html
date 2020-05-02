@@ -86,7 +86,7 @@
         <div class="row buttons">
             <div class="col-12 text-right">
                 <button onclick="printChecked()" type="button" class="btn btn-primary">Editovať označené</button>
-                <button type="submit" class="btn btn-primary">Vymazať označené</button>
+                <button onclick="deleteSelected()" type="button" class="btn btn-primary">Vymazať označené</button>
             </div>
         </div>
     </div>
@@ -101,6 +101,44 @@
         var str = a.join(', ');
         alert(a);
     }
+
+    function deleteSelected() {
+        var a = [];
+        $("input:checked").each(function() {
+            a.push($(this).attr('id'));
+        });
+        console.log(a.length)
+        if (a.length > 0) {
+            var r = confirm("Naozaj si prajete vymazať vybrané produkty?");
+             if (r == true) {
+                
+                var dataLoad = {
+                        "item_ids" : a
+                }
+                
+                console.log(dataLoad)
+                $.ajax({
+                        type : "POST",
+                        contentType : 'application/json; charset=utf-8',
+                        dataType : 'json',
+                        url : "http://localhost:8080/delete",
+                        data : JSON.stringify(dataLoad),
+                        success : function(result) {
+                            console.log(result);
+                            location.reload()
+                        },
+                        error: function(e){
+                            console.log("ERROR: ", e);
+                            alert("Oops! Niečo sa nepodarilo, skúste znova!")
+                        },
+                        done : function(e) {
+                            console.log("DONE");
+                        }
+                });
+             }
+        }
+    }
+
 </script>
 
 <script>
@@ -120,10 +158,11 @@
                 data : JSON.stringify(dataLoad),
                 success : function(result) {
                     console.log(result);
-                    // console.log("SUCCESS: ", data);
+                    location.reload()
                 },
                 error: function(e){
                     console.log("ERROR: ", e);
+                    alert("Oops! Niečo sa nepodarilo, skúste znova!")
                 },
                 done : function(e) {
                     console.log("DONE");
