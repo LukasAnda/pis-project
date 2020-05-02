@@ -59,4 +59,10 @@ class WebController {
         model.addAttribute("items", itemRepository.findAll().sortedBy { it.id })
         return "edit"
     }
+
+    @RequestMapping("/actualSeason")
+    fun getActualSeason(model: Model): String{
+        model.addAttribute("Moja mama", seasonRepository.findAll().sortedBy { it.id }.lastOrNull())
+        return "Tvoja mama"
+    }
 }
