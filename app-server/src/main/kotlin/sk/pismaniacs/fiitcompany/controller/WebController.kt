@@ -2,17 +2,16 @@ package sk.pismaniacs.fiitcompany.controller
 
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
+import org.springframework.ui.ModelMap
+import org.springframework.web.bind.annotation.*
 import sk.pismaniacs.fiitcompany.repository.ItemRepository
 import sk.pismaniacs.fiitcompany.repository.NotificationRepository
 import sk.pismaniacs.fiitcompany.repository.OrderRepository
 import sk.pismaniacs.fiitcompany.repository.SeasonRepository
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.servlet.ModelAndView
 import sk.pismaniacs.fiitcompany.model.requests.ModifyRequest
 import sk.pismaniacs.fiitcompany.model.requests.ModifyRequest2
 import sk.pismaniacs.fiitcompany.model.requests.ModifyResponse
@@ -68,10 +67,10 @@ class WebController {
         return "edit"
     }
 
-    @RequestMapping("/editProducts", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun editProducts(model: Model, @RequestBody request: ModifyRequest): String{
-        model.addAttribute("items", itemRepository.findAllById(request.item_ids.map { it.toLong() }))
-        return "redirect:localhost:8080/edit"
+    @RequestMapping("/editProducts")
+    fun editProducts(model: ModelMap, @RequestParam item_ids: List<String>): String{
+        model.addAttribute("items", itemRepository.findAllById(item_ids.map { it.toLong() }))
+        return "edit"
     }
 
     @RequestMapping("/actualSeason")
