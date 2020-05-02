@@ -7,7 +7,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "notification")
-data class Notification(@OneToOne(fetch = FetchType.LAZY)
+data class Notification(@OneToOne(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.ALL))
                         @JoinColumn(name = "item_id")
                         @JsonIgnoreProperties("purchases", "seasons")
                         var item: Item? = null,

@@ -6,5 +6,5 @@ data class DeleteRequest(
 )
 
 data class DeleteResponse(
-        val response: String
+        val data: String
 )
