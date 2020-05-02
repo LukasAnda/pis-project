@@ -1,0 +1,18 @@
+.header {
+    background-color:#999999;
+    padding-top:15px;
+    border-radius:15px;
+}
+
+.deleteBTN {
+    background-color: transparent;
+    border: 0px;
+}
+
+.products {
+    padding-top: 15px;
+}
+
+.buttons {
+    padding-top: 15px;
+}

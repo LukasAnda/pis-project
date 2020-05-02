@@ -43,6 +43,6 @@ class WebController {
     @RequestMapping("/allProducts")
     fun getAllProducts(model: Model): String{
         model.addAttribute("items", itemRepository.findAll().sortedBy { it.id })
-        return "TuSiDajNazovStranky"
+        return "edit"
     }
 }

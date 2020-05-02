@@ -24,7 +24,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">AbuyMe</a>
+        <a class="navbar-brand" href="/">AbuyMe</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -32,13 +32,13 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Všetky produkty</a>
+            <a class="nav-link" href="/">Všetky produkty</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Notifikácie</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Aktuálna sezóna</a>
+            <a class="nav-link" href="/actualSeason">Aktuálna sezóna</a>
           </li>
         </ul>
       </div>
@@ -47,94 +47,37 @@
     <div class="jumbotron">
         <div class="row header">
             <div class="col-1 text-left">
-                <p>Výber</p>
-            </div>
-            <div class="col-1 text-left">
                 <p>ID</p>
             </div>
             <div class="col-6 text-left">
                 <p>Názov produktu</p>
             </div>
-            <div class="col-3 text-right">
+            <div class="col-5 text-right">
                 <p>Jednotková cena</p>
-            </div>
-            <div class="col-1 text-center">
-                <p>Vymazať</p>
             </div>
         </div>
         <div class="products">
             <th:block th:each="item : ${items}">
                 <div class="row">
-                    <div class="col-1 text-center">
-                        <input type="checkbox" class="form-check-input" th:id="${item.id}">
-                    </div>
                     <div class="col-1 text-left">
                         <p th:utext="${item.id}">..</p>
                     </div>
                     <div class="col-6 text-left">
-                        <p th:utext="${item.name}">..</p>
+                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" th:value="${item.name}">
                     </div>
-                    <div class="col-3 text-right">
-                        <p th:utext="${item.price}">..</p>
-                    </div>
-                    <div class="col-1 text-center">
-                        <button th:id="${item.id}" type="submit" class="deleteBTN" onclick="confirmFunction(this.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    <div class="col-5 text-right">
+                         <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" th:value="${item.price}">
                     </div>
                 </div>
             </th:block>
         </div>
         <div class="row buttons">
             <div class="col-12 text-right">
-                <button onclick="printChecked()" type="button" class="btn btn-primary">Editovať označené</button>
-                <button type="submit" class="btn btn-primary">Vymazať označené</button>
+                <button type="submit" class="btn btn-primary">Uložiť</button>
             </div>
         </div>
     </div>
 </div> <!-- /container -->
-
-<script>
-    function printChecked(){
-        var a = [];
-        $("input:checked").each(function() {
-            a.push($(this).attr('id'));
-        });
-        var str = a.join(', ');
-        alert(a);
-    }
-</script>
-
-<script>
-    function confirmFunction(clicked_id) {
-      var txt;
-      var r = confirm("Naozaj si prajete vymazať vybraný produkt?");
-      if (r == true) {
-        console.log(clicked_id);
-        var dataLoad = {
-                "item_id" : clicked_id
-        }
-        $.ajax({
-                type : "POST",
-                contentType : 'application/json; charset=utf-8',
-                dataType : 'json',
-                url : "http://localhost:8080/delete.html",
-                data : JSON.stringify(dataLoad),
-                success : function(result) {
-                    console.log("SUCCESS: ", data);
-                },
-                error: function(e){
-                    console.log("ERROR: ", e);
-                },
-                done : function(e) {
-                    console.log("DONE");
-                }
-        });
-      }
-    }
-</script>
-
-
-
-
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
