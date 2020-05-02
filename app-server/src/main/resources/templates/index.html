@@ -110,7 +110,7 @@
       if (r == true) {
         console.log(clicked_id);
         var dataLoad = {
-                "item_id" : clicked_id
+                "item_ids" : [clicked_id]
         }
         $.ajax({
                 type : "POST",
