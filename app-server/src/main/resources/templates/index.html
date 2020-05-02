@@ -24,7 +24,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">AbuyMe</a>
+        <a class="navbar-brand" href="/">AbuyMe</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -32,13 +32,13 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Všetky produkty</a>
+            <a class="nav-link" href="/">Všetky produkty</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Notifikácie</a>
+            <a class="nav-link" href="/">Notifikácie</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Aktuálna sezóna</a>
+            <a class="nav-link" href="/actualSeason">Aktuálna sezóna</a>
           </li>
         </ul>
       </div>
@@ -98,8 +98,30 @@
         $("input:checked").each(function() {
             a.push($(this).attr('id'));
         });
-        var str = a.join(', ');
-        alert(a);
+        if (a.length > 0) {
+            
+            var dataLoad = {
+                    "item_ids" : a
+            }
+            console.log(dataLoad)
+            $.ajax({
+                    type : "POST",
+                    contentType : 'application/json; charset=utf-8',
+                    dataType : 'json',
+                    url : "http://localhost:8080/editProducts",
+                    data : JSON.stringify(dataLoad),
+                    success : function(result) {
+                        console.log(result);
+                    },
+                    error: function(e){
+                        console.log("ERROR: ", e);
+                        alert("Oops! Niečo sa nepodarilo, skúste znova!")
+                    },
+                    done : function(e) {
+                        console.log("DONE");
+                    }
+            });
+        }
     }
 
     function deleteSelected() {
@@ -139,9 +161,6 @@
         }
     }
 
-</script>
-
-<script>
     function confirmFunction(clicked_id) {
       var txt;
       var r = confirm("Naozaj si prajete vymazať vybraný produkt?");

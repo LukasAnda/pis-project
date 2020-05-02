@@ -68,17 +68,15 @@ class WebController {
         return "edit"
     }
 
-
-
     @RequestMapping("/editProducts", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun editProducts(model: Model, @RequestBody request: ModifyRequest): String{
-        model.addAttribute("Moj tatko", itemRepository.findAllById(request.item_ids.map { it.toLong() }))
-        return "Tvoj tatko"
+        model.addAttribute("items", itemRepository.findAllById(request.item_ids.map { it.toLong() }))
+        return "redirect:localhost:8080/edit"
     }
 
     @RequestMapping("/actualSeason")
     fun getActualSeason(model: Model): String{
-        model.addAttribute("Moja mama", seasonRepository.findAll().sortedBy { it.id }.lastOrNull())
-        return "Tvoja mama"
+        model.addAttribute("items", seasonRepository.findAll().sortedBy { it.id }.lastOrNull())
+        return "index"
     }
 }
