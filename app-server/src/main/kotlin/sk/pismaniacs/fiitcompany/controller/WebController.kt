@@ -68,7 +68,7 @@ class WebController {
     }
 
     @RequestMapping("/editProducts")
-    fun editProducts(model: ModelMap, @RequestParam item_ids: List<String>): String{
+    fun editProducts(model: ModelMap, @RequestParam item_ids: Array<String>): String{
         model.addAttribute("items", itemRepository.findAllById(item_ids.map { it.toLong() }))
         return "edit"
     }
