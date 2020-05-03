@@ -60,24 +60,70 @@
             <th:block th:each="item : ${items}">
                 <div class="row">
                     <div class="col-1 text-left">
-                        <p th:utext="${item.id}">..</p>
+                        <p class="itemRow" th:utext="${item.id}">..</p>
                     </div>
                     <div class="col-6 text-left">
-                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" th:value="${item.name}">
+                        <input type="text" class="form-control itemRow" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" th:value="${item.name}">
                     </div>
                     <div class="col-5 text-right">
-                         <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" th:value="${item.price}">
+                         <input type="text" class="form-control itemRow" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" th:value="${item.price}">
                     </div>
                 </div>
             </th:block>
         </div>
         <div class="row buttons">
             <div class="col-12 text-right">
-                <button type="submit" class="btn btn-primary">Uložiť</button>
+                <button onclick="saveChanges()" type="button" class="btn btn-primary">Uložiť</button>
             </div>
         </div>
     </div>
 </div> <!-- /container -->
+
+<script>
+    function saveChanges() {
+        var row = document.querySelectorAll(".itemRow");
+        var dataToSave = [];
+        var i;
+        for (i = 0; i < row.length; i+=3) {
+            var item = {
+                id: row[i].innerHTML,
+                name: row[i+1].value,
+                price: row[i+2].value
+            };
+            dataToSave.push(item);
+        }
+        console.log(dataToSave);
+        var dataLoad = {
+                 "item_ids" : dataToSave
+        }
+         
+         console.log(dataLoad);
+        
+         $.ajax({
+                 type : "POST",
+                 contentType : 'application/json; charset=utf-8',
+                 dataType : 'text',
+                 url : "http://localhost:8080/save",
+                 data : JSON.stringify(dataLoad),
+                 success : function(result) {
+                     console.log(result);
+                     location.reload();
+                 },
+                 error: function(e){
+                     console.log("ERROR: ", e);
+                     alert("Oops! Niečo sa nepodarilo, skúste znova!")
+                 },
+                 done : function(e) {
+                     console.log("DONE");
+                 }
+         });
+    }
+    
+    
+    
+    
+    
+</script>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->

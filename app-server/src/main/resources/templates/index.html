@@ -13,7 +13,7 @@
     <title>AbuyMe - All for you!</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    <link href="../../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
     
     <!-- Icons -->
     <script src="https://kit.fontawesome.com/f89c366a91.js" crossorigin="anonymous"></script>
@@ -98,10 +98,11 @@
         $("input:checked").each(function() {
             a.push($(this).attr('id'));
         });
-        var str = a.join(', ');
         if (a.length > 0) {
             
-            var dataLoad = "item_ids=" + str;
+            var dataLoad = {
+                    "item_ids" : a
+            }
             
             console.log(dataLoad)
            // $.post('/editProducts', {"item_ids" : a},
@@ -112,16 +113,15 @@
             
             $.ajax({
                     type : "POST",
-                    contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
-                    dataType : 'json',
-                    url : "/editProducts",
-                    data : dataLoad,
+                    contentType : 'application/json; charset=utf-8',
+                    dataType : 'text',
+                    url : "http://localhost:8080/edit",
+                    data : JSON.stringify(dataLoad),
                     success : function(result) {
-                        console.log(result);
+                        $("html").html(result);
                     },
                     error: function(e){
                         console.log("ERROR: ", e);
-                        $( "html" ).replaceWith( data );
                         alert("Oops! Niečo sa nepodarilo, skúste znova!")
                     },
                     done : function(e) {
@@ -206,7 +206,7 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="../static/js/bootstrap.js" th:href="@{/js/bootstrap.js}"></script>
+<script src="../../static/js/bootstrap.js" th:href="@{/js/bootstrap.js}"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 </body>
 </html>
