@@ -18,5 +18,5 @@ data class Item(
         @JsonIgnoreProperties("items")
         var seasons: List<Season> = emptyList(),
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-        var id: Long = 0
+        var id: Long? = null
 )

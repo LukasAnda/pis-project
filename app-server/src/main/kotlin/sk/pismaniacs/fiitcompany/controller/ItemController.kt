@@ -37,19 +37,19 @@ class ItemController {
     @RequestMapping("/seasons")
     fun getSeasons() = seasonRepository.findAll()
 
-    @RequestMapping("/addSeason/{seasonName}")
-    fun addSeason(@PathVariable seasonName: String) = itemRepository.findAll() // Get all items
-            .shuffled()// Shuffle them
-            .take(4)// Get 4 first (guaranteed to be unique and random due to shuffle
-            .let {
-                // Map to Season
-                Season(seasonName, System.currentTimeMillis(), it)
-            }.let {
-                // Insert the season to DB
-                seasonRepository.save(it)
-            }.let {
-                // Return all seasons
-                seasonRepository.findAll()
-            }
+//    @RequestMapping("/addSeason/{seasonName}")
+//    fun addSeason(@PathVariable seasonName: String) = itemRepository.findAll() // Get all items
+//            .shuffled()// Shuffle them
+//            .take(4)// Get 4 first (guaranteed to be unique and random due to shuffle
+//            .let {
+//                // Map to Season
+//                Season(seasonName, System.currentTimeMillis(), it)
+//            }.let {
+//                // Insert the season to DB
+//                seasonRepository.save(it)
+//            }.let {
+//                // Return all seasons
+//                seasonRepository.findAll()
+//            }
 
 }

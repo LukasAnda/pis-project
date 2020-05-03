@@ -1,15 +1,26 @@
 package sk.pismaniacs.fiitcompany.model
 
-import com.fasterxml.jackson.annotation.JsonBackReference
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.annotation.JsonManagedReference
+import org.hibernate.annotations.LazyCollection
+import org.hibernate.annotations.LazyCollectionOption
 import javax.persistence.*
 
 @Entity
 @Table(name = "notification")
-data class Notification(@OneToOne(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.ALL))
-                        @JoinColumn(name = "item_id")
-                        @JsonIgnoreProperties("purchases", "seasons")
-                        var item: Item? = null,
-                        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-                        var id: Long = 0)
+data class Notification (
+        var message: String = "",
+        var actual: Boolean = false,
+        @LazyCollection(LazyCollectionOption.FALSE)
+        @OneToMany
+        @JoinColumn(name = "regular_report_id")
+        var regularReports: List<RegularReport> = emptyList(),
+        @LazyCollection(LazyCollectionOption.FALSE)
+        @OneToMany
+        @JoinColumn(name = "seasonal_price_report_id")
+        var seasonalPriceReports: List<SeasonalPriceReport> = emptyList(),
+        @LazyCollection(LazyCollectionOption.FALSE)
+        @OneToMany
+        @JoinColumn(name = "seasonal_report_id")
+        var seasonalReports: List<SeasonalReport> = emptyList(),
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+        var id: Long? = null
+)

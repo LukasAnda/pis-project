@@ -15,5 +15,5 @@ data class Purchase(
         var quantity: Int = 0,
         var dateOfPurchase: Long = 0L,
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-        var id: Long = 0
+        var id: Long? = null
 )

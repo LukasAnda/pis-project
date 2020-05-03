@@ -8,7 +8,8 @@ import javax.persistence.*
 data class Season(
         var name: String = "",
         var startDate: Long = 0L,
-        @ManyToMany(cascade = arrayOf(CascadeType.ALL))
+        var actual: Boolean = false,
+        @ManyToMany(fetch = FetchType.EAGER)
         @JoinTable(
                 name = "season_item",
                 joinColumns = arrayOf(JoinColumn(name = "season_id")),
@@ -17,5 +18,5 @@ data class Season(
         @JsonIgnoreProperties("purchases", "seasons")
         var items: List<Item> = emptyList(),
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-        var id: Long = 0
+        var id: Long? = null
 )
