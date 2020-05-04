@@ -81,7 +81,8 @@ class WebController {
 
     @RequestMapping("/actualSeason")
     fun getActualSeason(model: Model): String{
-        model.addAttribute("items", seasonRepository.findFirstByOrderByIdDesc())
+        model.addAttribute("items", seasonRepository.findFirstByOrderByIdDesc().get().items)
+        model.addAttribute("season", seasonRepository.findFirstByOrderByIdDesc().get())
         return "actualSeason"
     }
 
