@@ -63,24 +63,25 @@
             </div>
         </div>
         <div class="products">
-            <th:block th:each="item : ${items}">
-                <div class="row">
-                    <div class="col-1 text-center">
-                        <input type="checkbox" class="form-check-input" th:id="${item.id}">
-                    </div>
-                    <div class="col-1 text-left">
-                        <p th:utext="${item.id}">..</p>
-                    </div>
-                    <div class="col-6 text-left">
-                        <p th:utext="${item.name}">..</p>
-                    </div>
-                    <div class="col-3 text-right">
-                        <p th:utext="${item.price}">..</p>
-                    </div>
-                    <div class="col-1 text-center">
-                        <button th:id="${item.id}" type="submit" class="deleteBTN" onclick="confirmFunction(this.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                    </div>
-                </div>
+            <th:block th:each="item : ${items.items}">
+                <p>kokot</p>
+<!--                <div class="row">-->
+<!--                    <div class="col-1 text-center">-->
+<!--                        <input type="checkbox" class="form-check-input" th:id="${item.id}">-->
+<!--                    </div>-->
+<!--                    <div class="col-1 text-left">-->
+<!--                        <p th:utext="${item.id}">..</p>-->
+<!--                    </div>-->
+<!--                    <div class="col-6 text-left">-->
+<!--                        <p th:utext="${item.name}">..</p>-->
+<!--                    </div>-->
+<!--                    <div class="col-3 text-right">-->
+<!--                        <p th:utext="${item.price}">..</p>-->
+<!--                    </div>-->
+<!--                    <div class="col-1 text-center">-->
+<!--                        <button th:id="${item.id}" type="submit" class="deleteBTN" onclick="confirmFunction(this.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>-->
+<!--                    </div>-->
+<!--                </div>-->
             </th:block>
         </div>
         <div class="row buttons">

@@ -51,14 +51,14 @@ class WebController {
         request.item_ids.forEach {
             itemRepository.deleteById(it.toLong())
         }
-        return ModifyResponse("PISko je picovina")
+        return ModifyResponse("OK")
     }
 
     @RequestMapping("/save" , method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     @ResponseBody
     fun saveItems(@RequestBody request: ModifyRequest2): ModifyResponse {
         itemRepository.saveAll(request.item_ids)
-        return ModifyResponse("PISko je picovina 2")
+        return ModifyResponse("OK")
     }
 
     @RequestMapping("/allProducts")
@@ -81,13 +81,13 @@ class WebController {
 
     @RequestMapping("/actualSeason")
     fun getActualSeason(model: Model): String{
-        model.addAttribute("items", seasonRepository.findAll().sortedBy { it.id }.lastOrNull())
-        return "index"
+        model.addAttribute("items", seasonRepository.findFirstByOrderByIdDesc())
+        return "actualSeason"
     }
 
     @RequestMapping("/notifications")
     fun getNotifications(model: Model): String{
         model.addAttribute("items", notificationRepository.findAll().sortedByDescending { it.id })
-        return "index"
+        return "notifications"
     }
 }
