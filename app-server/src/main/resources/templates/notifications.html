@@ -55,7 +55,7 @@
             <th:block th:each="item : ${items}">
                 <div class="row">
                     <div class="col-1 text-left">
-                        <p class="new" th:utext="${item.actual}">..</p>
+                        <div class="new" th:id="${item.actual}"></div>
                     </div>
                     <div class="col-11 text-left">
                         <p th:utext="${item.message}">..</p>
@@ -67,10 +67,21 @@
 </div> <!-- /container -->
 
 <script>
-    var newBadge = document.querySelector('.new');
-
-    if(newBadge.innerHTML == 'true'){
-        newBadge.style.display = 'none';
+    var newBadge = document.querySelectorAll('.new');
+    console.log(newBadge)
+    
+    for (i = 0; i < newBadge.length; i++) {
+        if(newBadge[i].id == 'false'){
+            newBadge[i].style.display = 'none';
+        }
+        else {
+            newBadge[i].style.backgroundColor = '#77c5fc';
+            newBadge[i].style.height = '15px';
+            newBadge[i].style.width = '15px';
+            newBadge[i].style.borderRadius = '50%';
+            newBadge[i].style.display = 'inline-block';
+            
+        }
     }
 </script>
 
@@ -78,7 +89,6 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="../static/js/bootstrap.js" th:href="@{/js/bootstrap.js}"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 </body>
 </html>

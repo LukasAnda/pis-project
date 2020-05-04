@@ -45,6 +45,14 @@
     </nav>
 <div class="container">
     <div class="jumbotron">
+        <div class="row">
+            <div class="col-6">
+                <p th:utext="${season.name}">..</p>
+            </div>
+            <div class="col-6">
+                <p th:utext="${season.startDate}">..</p>
+            </div>
+        </div>
         <div class="row header">
             <div class="col-1 text-left">
                 <p>Výber</p>
@@ -63,25 +71,24 @@
             </div>
         </div>
         <div class="products">
-            <th:block th:each="item : ${items.items}">
-                <p>kokot</p>
-<!--                <div class="row">-->
-<!--                    <div class="col-1 text-center">-->
-<!--                        <input type="checkbox" class="form-check-input" th:id="${item.id}">-->
-<!--                    </div>-->
-<!--                    <div class="col-1 text-left">-->
-<!--                        <p th:utext="${item.id}">..</p>-->
-<!--                    </div>-->
-<!--                    <div class="col-6 text-left">-->
-<!--                        <p th:utext="${item.name}">..</p>-->
-<!--                    </div>-->
-<!--                    <div class="col-3 text-right">-->
-<!--                        <p th:utext="${item.price}">..</p>-->
-<!--                    </div>-->
-<!--                    <div class="col-1 text-center">-->
-<!--                        <button th:id="${item.id}" type="submit" class="deleteBTN" onclick="confirmFunction(this.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>-->
-<!--                    </div>-->
-<!--                </div>-->
+            <th:block th:each="item : ${items}">
+                <div class="row">
+                    <div class="col-1 text-center">
+                        <input type="checkbox" class="form-check-input" th:id="${item.id}">
+                    </div>
+                    <div class="col-1 text-left">
+                        <p th:utext="${item.id}">..</p>
+                    </div>
+                    <div class="col-6 text-left">
+                        <p th:utext="${item.name}">..</p>
+                    </div>
+                    <div class="col-3 text-right">
+                        <p th:utext="${item.price}">..</p>
+                    </div>
+                    <div class="col-1 text-center">
+                        <button th:id="${item.id}" type="submit" class="deleteBTN" onclick="confirmFunction(this.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    </div>
+                </div>
             </th:block>
         </div>
         <div class="row buttons">
@@ -106,11 +113,7 @@
             }
             
             console.log(dataLoad)
-           // $.post('/editProducts', {"item_ids" : a},
-            //    function(result){
-           //     console.log(result)
-           // });
-            
+           
             
             $.ajax({
                     type : "POST",
@@ -207,7 +210,6 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="../../static/js/bootstrap.js" th:href="@{/js/bootstrap.js}"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 </body>
 </html>
