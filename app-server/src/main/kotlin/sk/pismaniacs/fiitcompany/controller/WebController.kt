@@ -84,4 +84,10 @@ class WebController {
         model.addAttribute("items", seasonRepository.findAll().sortedBy { it.id }.lastOrNull())
         return "index"
     }
+
+    @RequestMapping("/notifications")
+    fun getNotifications(model: Model): String{
+        model.addAttribute("items", notificationRepository.findAll().sortedByDescending { it.id })
+        return "index"
+    }
 }
