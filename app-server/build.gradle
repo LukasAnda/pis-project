@@ -1,0 +1,64 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.7.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.72'
+    id("com.github.bjornvester.wsdl2java") version "0.4"
+}
+
+defaultTasks 'build'
+
+group = 'sk.pismaniacs'
+version = '0.0.1'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main.kotlin.srcDirs += "$buildDir/generated/wsdl2java"
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation 'org.apache.cxf:cxf-rt-frontend-jaxws:3.3.2'
+    runtimeOnly 'org.apache.cxf:cxf-rt-transports-http:3.3.2'
+    runtimeOnly 'org.apache.cxf:cxf-rt-transports-http-jetty:3.3.2'
+
+    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+wsdl2java {
+    cxfVersion.set("3.3.2")
+}
+
+
+bootJar {
+//    baseName = 'gs-consuming-web-service'
+    version =  '0.0.1'
+    mainClassName = 'sk.pismaniacs.fiitcompany.FiitCompanyApplicationKt'
+}

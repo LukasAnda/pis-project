@@ -9,6 +9,7 @@ data class Season(
         var name: String = "",
         var startDate: Long = 0L,
         var actual: Boolean = false,
+        var editable: Boolean = false,
         @ManyToMany(fetch = FetchType.EAGER)
         @JoinTable(
                 name = "season_item",

@@ -11,7 +11,7 @@ import javax.persistence.*
 data class Item(
         var name: String = "",
         var price: Double = 0.0,
-        @OneToMany(mappedBy = "item", orphanRemoval = true, cascade = arrayOf(CascadeType.ALL), fetch = FetchType.LAZY)
+        @OneToMany(mappedBy = "item", orphanRemoval = true, cascade = arrayOf(CascadeType.ALL), fetch = FetchType.EAGER)
         @JsonIgnoreProperties("item")
         var purchases: List<Purchase> = emptyList(),
         @ManyToMany(mappedBy = "items")

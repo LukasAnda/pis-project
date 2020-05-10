@@ -45,7 +45,7 @@ class WebController {
         return "index"
     }
 
-    @RequestMapping("/delete" , method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    @RequestMapping("/delete", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     @ResponseBody
     fun deleteItems(@RequestBody request: ModifyRequest): ModifyResponse {
         request.item_ids.forEach {
@@ -54,7 +54,7 @@ class WebController {
         return ModifyResponse("OK")
     }
 
-    @RequestMapping("/save" , method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    @RequestMapping("/save", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     @ResponseBody
     fun saveItems(@RequestBody request: ModifyRequest2): ModifyResponse {
         itemRepository.saveAll(request.item_ids)
@@ -62,32 +62,76 @@ class WebController {
     }
 
     @RequestMapping("/allProducts")
-    fun getAllProducts(model: Model): String{
+    fun getAllProducts(model: Model): String {
         model.addAttribute("items", itemRepository.findAll().sortedBy { it.id })
         return "edit"
     }
 
     @RequestMapping("/editProducts2")
-    fun editProducts(model: ModelMap, @RequestParam item_ids: Array<String>): String{
+    fun editProducts(model: ModelMap, @RequestParam item_ids: Array<String>): String {
         model.addAttribute("items", itemRepository.findAllById(item_ids.map { it.toLong() }))
         return "edit"
     }
 
-    @RequestMapping("/edit" , method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    @RequestMapping("/edit", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun editTheProducts(model: Model, @RequestBody request: ModifyRequest): String {
         model.addAttribute("items", itemRepository.findAllById(request.item_ids.map { it.toLong() }))
         return "edit"
     }
 
+    @RequestMapping("/addSeasonItem", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun addSeasonItem(model: Model, @RequestBody request: ModifyRequest): String {
+        itemRepository.findAllById(request.item_ids.map { it.toLong() }).map { it.copy(price = 0.9 * it.price) }.also { items ->
+            itemRepository.saveAll(items)
+            seasonRepository.findFirstByOrderByIdDesc().ifPresent {
+                if (it.actual && it.editable) {
+                    seasonRepository.save(it.copy(items = it.items + items))
+                }
+            }
+        }
+
+        seasonRepository.findFirstByOrderByIdDesc().ifPresent {
+            if (it.editable) {
+                model.addAttribute("seasonalItems", it.items)
+            }
+            model.addAttribute("otherItems", itemRepository.findAll() - it.items)
+        }
+
+
+        return "TuSiDajStrankuPeter"
+    }
+
+    @RequestMapping("/removeSeasonItem", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun removeSeasonItem(model: Model, @RequestBody request: ModifyRequest): String {
+        itemRepository.findAllById(request.item_ids.map { it.toLong() }).map { it.copy(price = 1.1111 * it.price) }.also { items ->
+            itemRepository.saveAll(items)
+            seasonRepository.findFirstByOrderByIdDesc().ifPresent {
+                if (it.actual && it.editable) {
+                    seasonRepository.save(it.copy(items = it.items - items))
+                }
+            }
+        }
+
+        seasonRepository.findFirstByOrderByIdDesc().ifPresent {
+            if (it.editable) {
+                model.addAttribute("seasonalItems", it.items)
+            }
+            model.addAttribute("otherItems", itemRepository.findAll() - it.items)
+        }
+
+
+        return "TuSiDajStrankuPeter"
+    }
+
     @RequestMapping("/actualSeason")
-    fun getActualSeason(model: Model): String{
+    fun getActualSeason(model: Model): String {
         model.addAttribute("items", seasonRepository.findFirstByOrderByIdDesc().get().items)
         model.addAttribute("season", seasonRepository.findFirstByOrderByIdDesc().get())
         return "actualSeason"
     }
 
     @RequestMapping("/notifications")
-    fun getNotifications(model: Model): String{
+    fun getNotifications(model: Model): String {
         model.addAttribute("items", notificationRepository.findAll().sortedByDescending { it.id })
         return "notifications"
     }

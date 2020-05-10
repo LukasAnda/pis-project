@@ -8,7 +8,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "purchase")
 data class Purchase(
-        @ManyToOne(fetch = FetchType.LAZY)
+        @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "item_id")
         @JsonIgnoreProperties("purchases", "seasons")
         var item: Item? = null,
