@@ -7,14 +7,13 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <meta http-equiv="refresh" content="15"/>
     <link rel="icon" href="../../favicon.ico"/>
     <link rel="stylesheet" href="css/index.css">
 
     <title>AbuyMe - All for you!</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    <link href="../../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
     
     <!-- Icons -->
     <script src="https://kit.fontawesome.com/f89c366a91.js" crossorigin="anonymous"></script>
@@ -50,18 +49,27 @@
 <div class="container">
     <div class="jumbotron">
         <div class="row header">
-            <div class="col-12 text-center">
-                <p>Notifikácie</p>
+            <div class="col-1 text-left">
+                <p>ID</p>
+            </div>
+            <div class="col-6 text-left">
+                <p>Názov produktu</p>
+            </div>
+            <div class="col-3 text-right">
+                <p>Jednotková cena</p>
             </div>
         </div>
         <div class="products">
             <th:block th:each="item : ${items}">
                 <div class="row">
                     <div class="col-1 text-left">
-                        <div class="new" th:id="${item.actual}"></div>
+                        <p th:utext="${item.id}">..</p>
                     </div>
-                    <div class="col-11 text-left">
-                        <p class="link" th:id="${item.id}" th:utext="${item.message}">..</p>
+                    <div class="col-6 text-left">
+                        <p th:utext="${item.name}">..</p>
+                    </div>
+                    <div class="col-3 text-right">
+                        <p th:utext="${item.price}">..</p>
                     </div>
                 </div>
             </th:block>
@@ -69,77 +77,6 @@
     </div>
 </div> <!-- /container -->
 
-<script>
-    var newBadge = document.querySelectorAll('.new');
-    console.log(newBadge)
-    
-    for (i = 0; i < newBadge.length; i++) {
-        if(newBadge[i].id == 'false'){
-            newBadge[i].style.display = 'none';
-        }
-        else {
-            newBadge[i].style.backgroundColor = '#77c5fc';
-            newBadge[i].style.height = '15px';
-            newBadge[i].style.width = '15px';
-            newBadge[i].style.borderRadius = '50%';
-            newBadge[i].style.display = 'inline-block';
-            
-        }
-    }
-
-    var newSeason = document.querySelectorAll('.link');
-    for (i = 0; i < newSeason.length; i++) {
-        var str = newSeason[i].innerHTML;
-        console.log(str);
-        if(str.includes("season:")) {
-           console.log(newSeason[i]);
-           newSeason[i].innerHTML = "";
-           var a = document.createElement('a');
-           a.title = str;
-           a.textContent = str;
-           a.href = "/actualSeason";
-           newSeason[i].appendChild(a);
-        }
-        else if (str.includes("price")) {
-            newSeason[i].innerHTML = "";
-            var a = document.createElement('a');
-            a.title = str;
-            a.textContent = str;
-            a.id = newSeason[i].id;
-            a.href = "";
-            a.setAttribute('onclick','sendRequest(this.id)')
-            newSeason[i].appendChild(a);
-        }
-    }
-
-function sendRequest(clicked_id) {
-    console.log("Ahojjj");
-    console.log(clicked_id);
-    var dataLoad = {
-            "item_ids" : [clicked_id]
-    }
-    $.ajax({
-            type : "POST",
-            contentType : 'application/json; charset=utf-8',
-            dataType : 'json',
-            url : "http://localhost:8080/notification",
-            data : JSON.stringify(dataLoad),
-            success : function(result) {
-                console.log(result);
-                $("html").html(result);
-            },
-            error: function(e){
-                console.log("ERROR: ", e);
-                alert("Oops! Niečo sa nepodarilo, skúste znova!")
-            },
-            done : function(e) {
-                console.log("DONE");
-            }
-    });
-}
-
-
-</script>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->

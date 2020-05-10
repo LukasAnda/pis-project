@@ -40,6 +40,9 @@
           <li class="nav-item">
             <a class="nav-link" href="/actualSeason">Aktuálna sezóna</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/advert">Leták</a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -63,10 +66,10 @@
                         <p class="itemRow" th:utext="${item.id}">..</p>
                     </div>
                     <div class="col-6 text-left">
-                        <input type="text" class="form-control itemRow" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" th:value="${item.name}">
+                        <input type="text" class="form-control itemRow" id="InputName" aria-describedby="Name" placeholder="Enter name" th:value="${item.name}">
                     </div>
                     <div class="col-5 text-right">
-                         <input type="text" class="form-control itemRow" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" th:value="${item.price}">
+                         <input type="number" class="form-control itemRow" id="InputPrice" aria-describedby="Price" placeholder="Enter price" th:value="${item.price}">
                     </div>
                 </div>
             </th:block>
