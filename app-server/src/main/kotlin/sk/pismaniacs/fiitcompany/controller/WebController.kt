@@ -143,7 +143,6 @@ class WebController {
                 .findAllById(request.item_ids.map { it.toLong() })
                 .map { it.regularReports }
                 .flatten()
-                .map { it.item }
                 .filterNotNull()
                 .also {
                     model.addAttribute("items", it)
