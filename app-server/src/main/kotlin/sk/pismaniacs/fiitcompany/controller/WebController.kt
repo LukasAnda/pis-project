@@ -145,7 +145,7 @@ class WebController {
                     it.map { it.id }.filterNotNull().contains(requestId)
                 }.flatten()
 
-        model.addAttribute("items", reports)
+        model.addAttribute("items", reports.sortedBy { it.id })
         return "showNotification"
     }
 
@@ -165,7 +165,7 @@ class WebController {
                     it.map { it.id }.filterNotNull().contains(requestId)
                 }.flatten()
 
-        model.addAttribute("items", reports)
+        model.addAttribute("items", reports.sortedBy { it.id })
         return "showNotification"
     }
 
