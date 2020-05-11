@@ -102,7 +102,7 @@
     }
     
     function save(clicked_id, report_id) {
-        
+
         var row = document.querySelectorAll(".itemRow");
         var dataToSave = [];
         var i;
@@ -115,10 +115,10 @@
             dataToSave.push(item);
         }
         console.log(dataToSave);
-        
+
         var object = dataToSave.find(x => x.id === clicked_id);
         console.log(object);
-        
+
         var dataLoad = {
                  "item_ids" : object,
                  "report_id" : [report_id]

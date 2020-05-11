@@ -12,9 +12,8 @@ import sk.pismaniacs.fiitcompany.repository.NotificationRepository
 import sk.pismaniacs.fiitcompany.repository.OrderRepository
 import sk.pismaniacs.fiitcompany.repository.SeasonRepository
 import org.springframework.web.servlet.ModelAndView
-import sk.pismaniacs.fiitcompany.model.requests.ModifyRequest
-import sk.pismaniacs.fiitcompany.model.requests.ModifyRequest2
-import sk.pismaniacs.fiitcompany.model.requests.ModifyResponse
+import sk.pismaniacs.fiitcompany.model.Item
+import sk.pismaniacs.fiitcompany.model.requests.*
 
 
 @Controller
@@ -81,7 +80,7 @@ class WebController {
 
     @RequestMapping("/addSeasonItem", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun addSeasonItem(model: Model, @RequestBody request: ModifyRequest): String {
-        itemRepository.findAllById(request.item_ids.map { it.toLong() }).map { it.copy(price = 0.9 * it.price) }.also { items ->
+        itemRepository.findAllById(request.item_ids.map { it.toLong() }).map { it.copy(price = 0.9 * it.price, advertise = true) }.also { items ->
             itemRepository.saveAll(items)
             seasonRepository.findFirstByOrderByIdDesc().ifPresent {
                 if (it.actual && it.editable) {
@@ -93,17 +92,20 @@ class WebController {
         seasonRepository.findFirstByOrderByIdDesc().ifPresent {
             if (it.editable) {
                 model.addAttribute("seasonalItems", it.items)
+                model.addAttribute("otherItems", itemRepository.findAll() - it.items)
+            } else {
+                model.addAttribute("seasonalItems", it.items)
+                model.addAttribute("otherItems", emptyList<Item>())
             }
-            model.addAttribute("otherItems", itemRepository.findAll() - it.items)
         }
 
 
-        return "TuSiDajStrankuPeter"
+        return "actualSeason"
     }
 
     @RequestMapping("/removeSeasonItem", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun removeSeasonItem(model: Model, @RequestBody request: ModifyRequest): String {
-        itemRepository.findAllById(request.item_ids.map { it.toLong() }).map { it.copy(price = 1.1111 * it.price) }.also { items ->
+        itemRepository.findAllById(request.item_ids.map { it.toLong() }).map { it.copy(price = 1.1111 * it.price, advertise = false) }.also { items ->
             itemRepository.saveAll(items)
             seasonRepository.findFirstByOrderByIdDesc().ifPresent {
                 if (it.actual && it.editable) {
@@ -115,18 +117,69 @@ class WebController {
         seasonRepository.findFirstByOrderByIdDesc().ifPresent {
             if (it.editable) {
                 model.addAttribute("seasonalItems", it.items)
+                model.addAttribute("otherItems", itemRepository.findAll() - it.items)
+            } else {
+                model.addAttribute("seasonalItems", it.items)
+                model.addAttribute("otherItems", emptyList<Item>())
             }
-            model.addAttribute("otherItems", itemRepository.findAll() - it.items)
         }
 
 
-        return "TuSiDajStrankuPeter"
+        return "actualSeason"
+    }
+
+    @RequestMapping("/saveItem", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun saveItem(model: Model, @RequestBody request: ModifyRequest3): String {
+        val items = itemRepository.findAllById(listOf(request.item_ids.id.toLong()) )
+        items.map { item ->
+            item.copy(name = request.item_ids.name
+                    ?: "", price = request.item_ids.price.toDouble() ?: 0.0)
+        }.also {
+            itemRepository.saveAll(it)
+        }
+        val requestId = request.report_id.first().toLong()
+        val reports = notificationRepository.findAll()
+                .filter { it.regularReports.isNotEmpty() }
+                .map { it.regularReports }
+                .filter {
+                    it.map { it.id }.filterNotNull().contains(requestId)
+                }.flatten()
+
+        model.addAttribute("items", reports)
+        return "showNotification"
+    }
+
+
+    @RequestMapping("/addAdvert", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun addAdvert(model: Model, @RequestBody request: ModifyRequest4): String {
+        val items = itemRepository.findAllById(request.item_ids.map { it.toLong() })
+        items.map { item -> item.copy(advertise = true) }.also {
+            itemRepository.saveAll(it)
+        }
+
+        val requestId = request.report_id.first().toLong()
+        val reports = notificationRepository.findAll()
+                .filter { it.regularReports.isNotEmpty() }
+                .map { it.regularReports }
+                .filter {
+                    it.map { it.id }.filterNotNull().contains(requestId)
+                }.flatten()
+
+        model.addAttribute("items", reports)
+        return "showNotification"
     }
 
     @RequestMapping("/actualSeason")
     fun getActualSeason(model: Model): String {
-        model.addAttribute("items", seasonRepository.findFirstByOrderByIdDesc().get().items)
-        model.addAttribute("season", seasonRepository.findFirstByOrderByIdDesc().get())
+        seasonRepository.findFirstByOrderByIdDesc().ifPresent {
+            if (it.editable) {
+                model.addAttribute("seasonalItems", it.items)
+                model.addAttribute("otherItems", itemRepository.findAll() - it.items)
+            } else {
+                model.addAttribute("seasonalItems", it.items)
+                model.addAttribute("otherItems", emptyList<Item>())
+            }
+        }
         return "actualSeason"
     }
 
@@ -152,7 +205,7 @@ class WebController {
 
     @RequestMapping("/advert")
     fun showAdvert(model: Model): String {
-        model.addAttribute("items", itemRepository.findAll().sortedBy { it.id })
+        model.addAttribute("items", itemRepository.findAll().sortedBy { it.id }.filter { it.advertise })
         return "advert"
     }
 }

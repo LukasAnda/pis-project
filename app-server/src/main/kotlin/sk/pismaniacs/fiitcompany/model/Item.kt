@@ -14,6 +14,7 @@ data class Item(
         @OneToMany(mappedBy = "item", orphanRemoval = true, cascade = arrayOf(CascadeType.ALL), fetch = FetchType.EAGER)
         @JsonIgnoreProperties("item")
         var purchases: List<Purchase> = emptyList(),
+        var advertise: Boolean = false,
         @ManyToMany(mappedBy = "items")
         @JsonIgnoreProperties("items")
         var seasons: List<Season> = emptyList(),

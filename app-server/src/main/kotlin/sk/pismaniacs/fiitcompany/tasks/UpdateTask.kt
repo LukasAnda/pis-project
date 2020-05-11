@@ -102,7 +102,7 @@ class UpdateTask {
     private fun nextSeason() {
         seasonRepository.findFirstByOrderByIdDesc().ifPresent {
             seasonRepository.save(it.copy(actual = false))
-            it.items.map { it.copy(price = 1.1111 * it.price) }.let {
+            it.items.map { it.copy(price = 1.1111 * it.price, advertise = false) }.let {
                 itemRepository.saveAll(it)
             }
         }
@@ -113,7 +113,7 @@ class UpdateTask {
         val lastSeason = seasonRepository.findFirstByOrderByIdDesc().orElseGet { Season() }.id ?: 0
         itemRepository.findAll().shuffled().take(10).let {
 
-            it.map { it.copy(price = 0.9 * it.price) }.let {
+            it.map { it.copy(price = 0.9 * it.price, advertise = true) }.let {
                 itemRepository.saveAll(it)
             }
 
@@ -140,7 +140,7 @@ class UpdateTask {
                 ?.map { it.item }
                 ?.filterNotNull()
                 ?.map { it.copy(price = 0.9 * it.price) }
-                ?.also {itemRepository.saveAll(it)}
+                ?.also { itemRepository.saveAll(it) }
 
         generateNextWeekTransactions()
 
@@ -207,17 +207,24 @@ class UpdateTask {
                     }
                 }
                 .also {
-                    it.filter { it.second <= -20 }.map { SeasonalPriceReport(it.first, it.second) }.also {
-                        if (it.isNotEmpty()) {
-                            seasonalPriceReportRepository.saveAll(it)
-                            val newNotification = Notification("New seasonal price update", true, seasonalPriceReports = it)
-                            notificationRepository.save(newNotification)
-                        }
-                    }
+                    it.filter { it.second <= -20 }
+                            .map { Pair(it.first?.copy(price = (it.first?.price ?: 0.0) / 2), it.second) }
+                            .also {
+                                it.map { it.first }.filterNotNull().also {
+                                    itemRepository.saveAll(it)
+                                }
+                            }
+                            .map { SeasonalPriceReport(it.first, it.second) }.also {
+                                if (it.isNotEmpty()) {
+                                    seasonalPriceReportRepository.saveAll(it)
+                                    val newNotification = Notification("New seasonal price update", true, seasonalPriceReports = it)
+                                    notificationRepository.save(newNotification)
+                                }
+                            }
                 }
     }
 
-    private fun sendInfoToClients(){
+    private fun sendInfoToClients() {
         val emailResponse = emailPort.notify(Notify().apply {
             email = "lukas.anda@gmail.com"
             subject = "New Season"
@@ -225,7 +232,7 @@ class UpdateTask {
             teamId = "022"
             password = "Y6ZSLR"
         })
-        if(emailResponse.isSuccess){
+        if (emailResponse.isSuccess) {
             println("Email sent!!!")
         } else {
             println("Email failed!!!")
@@ -237,7 +244,7 @@ class UpdateTask {
             teamId = "022"
             password = "Y6ZSLR"
         })
-        if(mailResponse.isSuccess){
+        if (mailResponse.isSuccess) {
             println("Mail sent!!!")
         } else {
             println("Mail failed!!!")
@@ -250,14 +257,14 @@ class UpdateTask {
             password = "Y6ZSLR"
         })
 
-        if(smsResponse.isSuccess){
+        if (smsResponse.isSuccess) {
             println("Sms sent!!!")
         } else {
             println("Sms failed!!!")
         }
     }
 
-    private fun check(){
+    private fun check() {
         val response = kontrolaStavuPort.insert(Insert().apply {
             teamId = "022"
             teamPassword = "Y6ZSLR"
@@ -270,7 +277,7 @@ class UpdateTask {
         println("New check has id: ${response.id}")
     }
 
-    private fun requestItem(item: Item){
+    private fun requestItem(item: Item) {
         val response = objednavkaPort.insert(sk.stuba.fiit.predmety.pis.pis.students.team022objednavka.types.Insert().apply {
             teamId = "022"
             teamPassword = "Y6ZSLR"
