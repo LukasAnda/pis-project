@@ -7,7 +7,6 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <meta http-equiv="refresh" content="15"/>
     <link rel="icon" href="../../favicon.ico"/>
     <link rel="stylesheet" href="css/index.css">
 
@@ -96,25 +95,32 @@
            newSeason[i].innerHTML = "";
            var a = document.createElement('a');
            a.title = str;
+           a.className = "btn";
            a.textContent = str;
            a.href = "/actualSeason";
            newSeason[i].appendChild(a);
         }
-        else if (str.includes("price")) {
+        else if (str === "New price update") {
             newSeason[i].innerHTML = "";
-            var a = document.createElement('a');
-            a.title = str;
-            a.textContent = str;
-            a.id = newSeason[i].id;
-            // a.href = "";
-            a.setAttribute('onclick','sendRequest(this.id)')
-            newSeason[i].appendChild(a);
+            var btn = document.createElement('button');
+            btn.textContent = str;
+            btn.id = newSeason[i].id;
+            btn.className = "btn";
+            btn.setAttribute('onclick','sendRequest(this.id)');
+            btn.setAttribute('type','button');
+            newSeason[i].appendChild(btn);
+        }
+        else {
+            newSeason[i].innerHTML = "";
+            var fakebtn = document.createElement('button');
+            fakebtn.textContent = str;
+            fakebtn.className = "btn";
+            fakebtn.setAttribute('type','button');
+            newSeason[i].appendChild(fakebtn);
         }
     }
 
 function sendRequest(clicked_id) {
-    console.log("Ahojjj");
-    console.log(clicked_id);
     var dataLoad = {
             "item_ids" : [clicked_id]
     }
@@ -125,12 +131,11 @@ function sendRequest(clicked_id) {
             url : "http://localhost:8080/notification",
             data : JSON.stringify(dataLoad),
             success : function(result) {
-                console.log(result);
                 $("html").html(result);
             },
             error: function(e){
                 console.log("ERROR: ", e);
-                // alert("Oops! Niečo sa nepodarilo, skúste znova!")
+                alert("Oops! Niečo sa nepodarilo, skúste znova!")
             },
             done : function(e) {
                 console.log("DONE");

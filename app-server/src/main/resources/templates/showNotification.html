@@ -58,52 +58,52 @@
             <div class="col-3 text-right">
                 <p>Jednotková cena</p>
             </div>
-            <div class="col-2 text-right">
+            <div class="col-1 text-right">
                 <p>Leták</p>
+            </div>
+            <div class="col-1 text-right">
+                <p>Uložiť</p>
             </div>
         </div>
         <div class="products">
-            <th:block th:each="item : ${items}">
-                <div class="row">
+            <th:block th:each="report : ${items}">
+                <div class="row individualItems">
                     <div class="col-1 text-left">
-                        <p class="itemRow" th:utext="${item.id}">..</p>
+                        <p class="itemRow" th:utext="${report.item.id}">..</p>
                     </div>
                     <div class="col-6 text-left">
-                        <input type="text" class="form-control itemRow" id="InputName" aria-describedby="Name" placeholder="Enter name" th:value="${item.name}">
+                        <input type="text" class="form-control itemRow" id="InputName" aria-describedby="Name" placeholder="Enter name" th:value="${report.item.name}">
                     </div>
-                    <div class="col-5 text-right">
-                         <input type="number" class="form-control itemRow" id="InputPrice" aria-describedby="Price" placeholder="Enter price" th:value="${item.price}">
+                    <div class="col-3 text-right">
+                         <input type="number" class="form-control itemRow" id="InputPrice" aria-describedby="Price" placeholder="Enter price" th:value="${report.item.price}">
                     </div>
-                    <div class="col-5 text-right">
-                         <button onclick="" type="button" class="btn btn-primary">Pridať</button>
+                    <div class="col-1 text-right">
+                         <button onclick="addAdvert(this.id)" th:id="${report.item.id}" type="button" class="btn btn-primary">Pridať</button>
+                    </div>
+                    <div class="col-1 text-right">
+                         <button onclick="save(this.id)" type="button" th:id="${report.item.id}" class="btn btn-primary">Uložiť</button>
                     </div>
                 </div>
             </th:block>
         </div>
-        <div class="row buttons">
-            <div class="col-12 text-right">
-                <button onclick="saveChanges()" type="button" class="btn btn-primary">Uložiť</button>
+        <div class="row">
+            <div class="col-12 text-left">
+                <a href="/notifications" class="btn btn-primary">Späť</a>
             </div>
         </div>
     </div>
 </div> <!-- /container -->
 
 <script>
-    function saveChanges() {
-        var row = document.querySelectorAll(".itemRow");
-        var dataToSave = [];
-        var i;
-        for (i = 0; i < row.length; i+=3) {
-            var item = {
-                id: row[i].innerHTML,
-                name: row[i+1].value,
-                price: row[i+2].value
-            };
-            dataToSave.push(item);
-        }
-        console.log(dataToSave);
+    
+    var individualItems = document.querySelectorAll(".individualItems");
+    for (i = 0; i < individualItems.length; i++) {
+        individualItems[i].style.margin = "10px 0 0 0";
+    }
+    
+    function save(clicked_id) {
         var dataLoad = {
-                 "item_ids" : dataToSave
+                 "item_ids" : [clicked_id]
         }
          
          console.log(dataLoad);
@@ -112,11 +112,10 @@
                  type : "POST",
                  contentType : 'application/json; charset=utf-8',
                  dataType : 'text',
-                 url : "http://localhost:8080/save",
+                 url : "http://localhost:8080/saveItem",
                  data : JSON.stringify(dataLoad),
                  success : function(result) {
-                     console.log(result);
-                     location.reload();
+                     $("html").html(result);
                  },
                  error: function(e){
                      console.log("ERROR: ", e);
@@ -127,10 +126,32 @@
                  }
          });
     }
-    
-    
-    
-    
+
+    function addAdvert(clicked_id) {
+        var dataLoad = {
+                 "item_ids" : "item_ids" : [clicked_id]
+        }
+         
+         console.log(dataLoad);
+        
+         $.ajax({
+                 type : "POST",
+                 contentType : 'application/json; charset=utf-8',
+                 dataType : 'text',
+                 url : "http://localhost:8080/addAdvert",
+                 data : JSON.stringify(dataLoad),
+                 success : function(result) {
+                     $("html").html(result);
+                 },
+                 error: function(e){
+                     console.log("ERROR: ", e);
+                     alert("Oops! Niečo sa nepodarilo, skúste znova!")
+                 },
+                 done : function(e) {
+                     console.log("DONE");
+                 }
+         });
+    }
     
 </script>
 
