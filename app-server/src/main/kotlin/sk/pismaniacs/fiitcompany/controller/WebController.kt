@@ -150,4 +150,10 @@ class WebController {
                 }
         return "showNotification"
     }
+
+    @RequestMapping("/advert")
+    fun showAdvert(model: Model): String {
+        model.addAttribute("items", itemRepository.findAll().sortedBy { it.id })
+        return "advert"
+    }
 }
