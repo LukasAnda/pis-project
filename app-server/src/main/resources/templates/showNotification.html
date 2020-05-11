@@ -78,10 +78,10 @@
                          <input type="number" class="form-control itemRow" id="InputPrice" aria-describedby="Price" placeholder="Enter price" th:value="${report.item.price}">
                     </div>
                     <div class="col-1 text-right">
-                         <button onclick="addAdvert(this.id)" th:id="${report.item.id}" type="button" class="btn btn-primary">Pridať</button>
+                        <button onclick="addAdvert(this.id, this.value)" th:id="${report.item.id}" th:value="${report.id}" type="button" class="btn btn-primary">Pridať</button>
                     </div>
                     <div class="col-1 text-right">
-                         <button onclick="save(this.id)" type="button" th:id="${report.item.id}" class="btn btn-primary">Uložiť</button>
+                         <button onclick="save(this.id, this.value)" th:value="${report.id}" type="button" th:id="${report.item.id}" class="btn btn-primary">Uložiť</button>
                     </div>
                 </div>
             </th:block>
@@ -101,9 +101,27 @@
         individualItems[i].style.margin = "10px 0 0 0";
     }
     
-    function save(clicked_id) {
+    function save(clicked_id, report_id) {
+        
+        var row = document.querySelectorAll(".itemRow");
+        var dataToSave = [];
+        var i;
+        for (i = 0; i < row.length; i+=3) {
+            var item = {
+                id: row[i].innerHTML,
+                name: row[i+1].value,
+                price: row[i+2].value
+            };
+            dataToSave.push(item);
+        }
+        console.log(dataToSave);
+        
+        var object = dataToSave.find(x => x.id === clicked_id);
+        console.log(object);
+        
         var dataLoad = {
-                 "item_ids" : [clicked_id]
+                 "item_ids" : object,
+                 "report_id" : [report_id]
         }
          
          console.log(dataLoad);
@@ -127,9 +145,10 @@
          });
     }
 
-    function addAdvert(clicked_id) {
+    function addAdvert(clicked_id, report_id) {
+        console.log(report_id);
         var dataLoad = {
-                 "item_ids" : "item_ids" : [clicked_id]
+                 "item_ids" : [clicked_id]
         }
          
          console.log(dataLoad);
