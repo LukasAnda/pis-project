@@ -130,9 +130,24 @@ class WebController {
         return "actualSeason"
     }
 
+
     @RequestMapping("/notifications")
     fun getNotifications(model: Model): String {
         model.addAttribute("items", notificationRepository.findAll().sortedByDescending { it.id })
         return "notifications"
+    }
+
+    @RequestMapping("/notification", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun showNotification(model: Model, @RequestBody request: ModifyRequest): String {
+        notificationRepository
+                .findAllById(request.item_ids.map { it.toLong() })
+                .map { it.regularReports }
+                .flatten()
+                .map { it.item }
+                .filterNotNull()
+                .also {
+                    model.addAttribute("items", it)
+                }
+        return "showNotification"
     }
 }

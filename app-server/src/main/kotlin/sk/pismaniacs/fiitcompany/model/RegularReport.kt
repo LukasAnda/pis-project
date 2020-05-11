@@ -7,7 +7,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "regular_report")
-data class RegularReport(@OneToOne
+data class RegularReport(@OneToOne(fetch = FetchType.EAGER)
                          @JoinColumn(name = "item_id")
                          @JsonIgnoreProperties("purchases", "seasons")
                          var item: Item? = null,

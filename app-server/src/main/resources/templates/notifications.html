@@ -7,7 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <meta http-equiv="refresh" content="15"/>
+<!--    <meta http-equiv="refresh" content="15"/>-->
     <link rel="icon" href="../../favicon.ico"/>
     <link rel="stylesheet" href="css/index.css">
 
@@ -106,7 +106,7 @@
             a.title = str;
             a.textContent = str;
             a.id = newSeason[i].id;
-            a.href = "";
+            // a.href = "";
             a.setAttribute('onclick','sendRequest(this.id)')
             newSeason[i].appendChild(a);
         }
@@ -121,7 +121,7 @@ function sendRequest(clicked_id) {
     $.ajax({
             type : "POST",
             contentType : 'application/json; charset=utf-8',
-            dataType : 'json',
+            dataType : 'text',
             url : "http://localhost:8080/notification",
             data : JSON.stringify(dataLoad),
             success : function(result) {
@@ -130,7 +130,7 @@ function sendRequest(clicked_id) {
             },
             error: function(e){
                 console.log("ERROR: ", e);
-                alert("Oops! Niečo sa nepodarilo, skúste znova!")
+                // alert("Oops! Niečo sa nepodarilo, skúste znova!")
             },
             done : function(e) {
                 console.log("DONE");
