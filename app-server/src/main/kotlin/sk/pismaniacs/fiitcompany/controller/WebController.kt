@@ -91,10 +91,10 @@ class WebController {
 
         seasonRepository.findFirstByOrderByIdDesc().ifPresent {
             if (it.editable) {
-                model.addAttribute("seasonalItems", it.items)
-                model.addAttribute("otherItems", itemRepository.findAll() - it.items)
+                model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
+                model.addAttribute("otherItems", (itemRepository.findAll() - it.items).sortedBy { it.id })
             } else {
-                model.addAttribute("seasonalItems", it.items)
+                model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
                 model.addAttribute("otherItems", emptyList<Item>())
             }
         }
@@ -116,10 +116,10 @@ class WebController {
 
         seasonRepository.findFirstByOrderByIdDesc().ifPresent {
             if (it.editable) {
-                model.addAttribute("seasonalItems", it.items)
-                model.addAttribute("otherItems", itemRepository.findAll() - it.items)
+                model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
+                model.addAttribute("otherItems", (itemRepository.findAll() - it.items).sortedBy { it.id })
             } else {
-                model.addAttribute("seasonalItems", it.items)
+                model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
                 model.addAttribute("otherItems", emptyList<Item>())
             }
         }
@@ -173,10 +173,10 @@ class WebController {
     fun getActualSeason(model: Model): String {
         seasonRepository.findFirstByOrderByIdDesc().ifPresent {
             if (it.editable) {
-                model.addAttribute("seasonalItems", it.items)
-                model.addAttribute("otherItems", itemRepository.findAll() - it.items)
+                model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
+                model.addAttribute("otherItems", (itemRepository.findAll() - it.items).sortedBy { it.id })
             } else {
-                model.addAttribute("seasonalItems", it.items)
+                model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
                 model.addAttribute("otherItems", emptyList<Item>())
             }
         }
