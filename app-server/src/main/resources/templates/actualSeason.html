@@ -64,8 +64,11 @@
                     <div class="col-6 text-left">
                        <p>Názov produktu</p>
                     </div>
-                    <div class="col-6 text-left">
+                    <div class="col-4 text-left">
                         <p>Cena</p>
+                    </div>
+                    <div class="col-2 text-left">
+                        <p>Pridať do sezóny</p>
                     </div>
                 </div>
             </div>
@@ -74,8 +77,11 @@
                     <div class="col-6 text-left">
                         <p>Názov produktu</p>
                     </div>
-                    <div class="col-6 text-left">
+                    <div class="col-4 text-left">
                         <p>Cena</p>
+                    </div>
+                    <div class="col-2 text-left">
+                        <p>Vymazať</p>
                     </div>
                 </div>
             </div>
@@ -103,15 +109,18 @@
                         <div class="col-6">
                             <p th:utext="${item.name}">..</p>
                         </div>
-                        <div class="col-6">
+                        <div class="col-4">
                             <p th:utext="${item.price}">..</p>
+                        </div>
+                        <div class="col-2">
+                            <button th:id="${item.id}" type="submit" class="deleteBTN" onclick="confirmFunction(this.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
                         </div>
                     </div>
                 </th:block>
             </div>
         </div>
     </div>
-</div> 
+</div>
 
 <script>
     function addItem(clicked_id) {
@@ -137,7 +146,35 @@
             }
         });
     }
-
+    
+    function confirmFunction(clicked_id) {
+        var txt;
+        var r = confirm("Naozaj si prajete vymazať vybraný produkt?");
+        if (r == true) {
+            console.log(clicked_id);
+            var dataLoad = {
+                "item_ids" : [clicked_id]
+            }
+            $.ajax({
+                type : "POST",
+                contentType : 'application/json; charset=utf-8',
+                dataType : 'json',
+                url : "http://localhost:8080/delete",
+                data : JSON.stringify(dataLoad),
+                success : function(result) {
+                    console.log(result);
+                    location.reload()
+                },
+                error: function(e){
+                    console.log("ERROR: ", e);
+                    alert("Oops! Niečo sa nepodarilo, skúste znova!")
+                },
+                done : function(e) {
+                    console.log("DONE");
+                }
+            });
+        }
+    }
 </script>
 
 
