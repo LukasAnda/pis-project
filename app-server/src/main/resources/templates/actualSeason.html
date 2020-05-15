@@ -90,7 +90,7 @@
         <div class="row">
             <div class="col-6">
                 <th:block th:each="item : ${otherItems}">
-                    <div class="row">
+                    <div class="row individualItems">
                         <div class="col-6">
                             <p th:utext="${item.name}">..</p>
                         </div>
@@ -105,7 +105,7 @@
             </div>
             <div class="col-6">
                 <th:block th:each="item : ${seasonalItems}">
-                    <div class="row">
+                    <div class="row individualItems">
                         <div class="col-6">
                             <p th:utext="${item.name}">..</p>
                         </div>
@@ -113,7 +113,7 @@
                             <p th:utext="${item.price}">..</p>
                         </div>
                         <div class="col-2">
-                            <button th:id="${item.id}" type="submit" class="deleteBTN" onclick="confirmFunction(this.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                            <button th:id="${item.id}" type="button" class="btn btn-primary" onclick="confirmFunction(this.id)">Vymazať</button>
                         </div>
                     </div>
                 </th:block>
@@ -123,6 +123,11 @@
 </div>
 
 <script>
+    var individualItems = document.querySelectorAll(".individualItems");
+    for (i = 0; i < individualItems.length; i++) {
+        individualItems[i].style.margin = "10px 0 0 0";
+    }
+
     function addItem(clicked_id) {
         var dataLoad = {
             "item_ids" : [clicked_id]
@@ -130,12 +135,11 @@
         $.ajax({
             type : "POST",
             contentType : 'application/json; charset=utf-8',
-            dataType : 'json',
+            dataType : 'text',
             url : "http://localhost:8080/addSeasonItem",
             data : JSON.stringify(dataLoad),
             success : function(result) {
-                console.log(result);
-                location.reload()
+                $("html").html(result);
             },
             error: function(e){
                 console.log("ERROR: ", e);
@@ -146,7 +150,7 @@
             }
         });
     }
-    
+
     function confirmFunction(clicked_id) {
         var txt;
         var r = confirm("Naozaj si prajete vymazať vybraný produkt?");
@@ -158,12 +162,11 @@
             $.ajax({
                 type : "POST",
                 contentType : 'application/json; charset=utf-8',
-                dataType : 'json',
-                url : "http://localhost:8080/delete",
+                dataType : 'text',
+                url : "http://localhost:8080/removeSeasonItem",
                 data : JSON.stringify(dataLoad),
                 success : function(result) {
-                    console.log(result);
-                    location.reload()
+                    $("html").html(result);
                 },
                 error: function(e){
                     console.log("ERROR: ", e);
