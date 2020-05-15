@@ -7,7 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <meta http-equiv="refresh" content="30"/>
+<!--    <meta http-equiv="refresh" content="30"/>-->
     <link rel="icon" href="../../favicon.ico"/>
     <link rel="stylesheet" href="css/index.css">
         
@@ -48,174 +48,96 @@
         </ul>
       </div>
     </nav>
-<div class="container">
+<div>
     <div class="jumbotron">
         <div class="row">
-            <div class="col-6 text-left">
-                <p th:utext="${season.name}">..</p>
+            <div class="col-6 text-center">
+                <p>Všetky produkty</p>
             </div>
-            <div class="col-6 text-right">
-                <p th:utext="${season.startDate}">..</p>
+            <div class="col-6 text-center">
+                <p>Sezónne produkty</p>
             </div>
         </div>
         <div class="row header">
-            <div class="col-1 text-left">
-                <p>Výber</p>
-            </div>
-            <div class="col-1 text-left">
-                <p>ID</p>
-            </div>
-            <div class="col-6 text-left">
-                <p>Názov produktu</p>
-            </div>
-            <div class="col-3 text-right">
-                <p>Jednotková cena</p>
-            </div>
-            <div class="col-1 text-center">
-                <p>Vymazať</p>
-            </div>
-        </div>
-        <div class="products">
-            <th:block th:each="item : ${items}">
+            <div class="col-6">
                 <div class="row">
-                    <div class="col-1 text-center">
-                        <input type="checkbox" class="form-check-input hideEl" th:id="${item.id}">
-                    </div>
-                    <div class="col-1 text-left">
-                        <p th:utext="${item.id}">..</p>
+                    <div class="col-6 text-left">
+                       <p>Názov produktu</p>
                     </div>
                     <div class="col-6 text-left">
-                        <p th:utext="${item.name}">..</p>
-                    </div>
-                    <div class="col-3 text-right">
-                        <p th:utext="${item.price}">..</p>
-                    </div>
-                    <div class="col-1 text-center">
-                        <button th:id="${item.id}" type="submit" class="deleteBTN" onclick="confirmFunction(this.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                        <p>Cena</p>
                     </div>
                 </div>
-            </th:block>
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6 text-left">
+                        <p>Názov produktu</p>
+                    </div>
+                    <div class="col-6 text-left">
+                        <p>Cena</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="row buttons">
-            <div class="col-12 text-right">
-                <button onclick="printChecked()" type="button" class="btn btn-primary hideEl">Editovať označené</button>
-                <button onclick="deleteSelected()" type="button" class="btn btn-primary hideEl">Vymazať označené</button>
+
+        <div class="row">
+            <div class="col-6">
+                <th:block th:each="item : ${otherItems}">
+                    <div class="row">
+                        <div class="col-6">
+                            <p th:utext="${item.name}">..</p>
+                        </div>
+                        <div class="col-4">
+                            <p th:utext="${item.price}">..</p>
+                        </div>
+                        <div class="col-2">
+                            <button th:id="${item.id}" onclick="addItem(this.id)" type="button" class="btn btn-primary">Pridať</button>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+            <div class="col-6">
+                <th:block th:each="item : ${seasonalItems}">
+                    <div class="row">
+                        <div class="col-6">
+                            <p th:utext="${item.name}">..</p>
+                        </div>
+                        <div class="col-6">
+                            <p th:utext="${item.price}">..</p>
+                        </div>
+                    </div>
+                </th:block>
             </div>
         </div>
     </div>
-</div> <!-- /container -->
+</div> 
 
 <script>
-    
-    var hideEl = document.querySelectorAll('.hideEl');
-    console.log(hideEl)
-    
-    for (i = 0; i < hideEl.length; i++) {
-        hideEl[i].disabled = true;
-        console.log("disables")
-    }
-    
-    
-    
-    function printChecked(){
-        var a = [];
-        $("input:checked").each(function() {
-            a.push($(this).attr('id'));
-        });
-        if (a.length > 0) {
-            
-            var dataLoad = {
-                    "item_ids" : a
-            }
-            
-            console.log(dataLoad)
-           
-            
-            $.ajax({
-                    type : "POST",
-                    contentType : 'application/json; charset=utf-8',
-                    dataType : 'text',
-                    url : "http://localhost:8080/edit",
-                    data : JSON.stringify(dataLoad),
-                    success : function(result) {
-                        $("html").html(result);
-                    },
-                    error: function(e){
-                        console.log("ERROR: ", e);
-                        alert("Oops! Niečo sa nepodarilo, skúste znova!")
-                    },
-                    done : function(e) {
-                        console.log("DONE");
-                    }
-            });
-        }
-    }
-
-    function deleteSelected() {
-        var a = [];
-        $("input:checked").each(function() {
-            a.push($(this).attr('id'));
-        });
-        console.log(a.length)
-        if (a.length > 0) {
-            var r = confirm("Naozaj si prajete vymazať vybrané produkty?");
-             if (r == true) {
-                
-                var dataLoad = {
-                        "item_ids" : a
-                }
-                
-                console.log(dataLoad)
-                $.ajax({
-                        type : "POST",
-                        contentType : 'application/json; charset=utf-8',
-                        dataType : 'json',
-                        url : "http://localhost:8080/delete",
-                        data : JSON.stringify(dataLoad),
-                        success : function(result) {
-                            console.log(result);
-                            location.reload()
-                        },
-                        error: function(e){
-                            console.log("ERROR: ", e);
-                            alert("Oops! Niečo sa nepodarilo, skúste znova!")
-                        },
-                        done : function(e) {
-                            console.log("DONE");
-                        }
-                });
-             }
-        }
-    }
-
-    function confirmFunction(clicked_id) {
-      var txt;
-      var r = confirm("Naozaj si prajete vymazať vybraný produkt?");
-      if (r == true) {
-        console.log(clicked_id);
+    function addItem(clicked_id) {
         var dataLoad = {
-                "item_ids" : [clicked_id]
+            "item_ids" : [clicked_id]
         }
         $.ajax({
-                type : "POST",
-                contentType : 'application/json; charset=utf-8',
-                dataType : 'json',
-                url : "http://localhost:8080/delete",
-                data : JSON.stringify(dataLoad),
-                success : function(result) {
-                    console.log(result);
-                    location.reload()
-                },
-                error: function(e){
-                    console.log("ERROR: ", e);
-                    alert("Oops! Niečo sa nepodarilo, skúste znova!")
-                },
-                done : function(e) {
-                    console.log("DONE");
-                }
+            type : "POST",
+            contentType : 'application/json; charset=utf-8',
+            dataType : 'json',
+            url : "http://localhost:8080/addSeasonItem",
+            data : JSON.stringify(dataLoad),
+            success : function(result) {
+                console.log(result);
+                location.reload()
+            },
+            error: function(e){
+                console.log("ERROR: ", e);
+                alert("Oops! Niečo sa nepodarilo, skúste znova!")
+            },
+            done : function(e) {
+                console.log("DONE");
+            }
         });
-      }
     }
+
 </script>
 
 
