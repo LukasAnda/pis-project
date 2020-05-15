@@ -7,9 +7,9 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-<!--    <meta http-equiv="refresh" content="30"/>-->
+    <meta http-equiv="refresh" content="15"/>
     <link rel="icon" href="../../favicon.ico"/>
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/actualSeason.css">
         
 
     <title>AbuyMe - All for you!</title>
@@ -55,12 +55,12 @@
                 <p>Všetky produkty</p>
             </div>
             <div class="col-6 text-center">
-                <p>Sezónne produkty</p>
+                <p class="lockedSeason" th:id="${isEditable}">Sezónne produkty</p>
             </div>
         </div>
-        <div class="row header">
+        <div class="row">
             <div class="col-6">
-                <div class="row">
+                <div class="row header">
                     <div class="col-6 text-left">
                        <p>Názov produktu</p>
                     </div>
@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div class="col-6">
-                <div class="row">
+                <div class="row header">
                     <div class="col-6 text-left">
                         <p>Názov produktu</p>
                     </div>
@@ -81,7 +81,7 @@
                         <p>Cena</p>
                     </div>
                     <div class="col-2 text-left">
-                        <p>Vymazať</p>
+                        <p>Vymazať zo sezóny</p>
                     </div>
                 </div>
             </div>
@@ -113,7 +113,7 @@
                             <p th:utext="${item.price}">..</p>
                         </div>
                         <div class="col-2">
-                            <button th:id="${item.id}" type="button" class="btn btn-primary" onclick="confirmFunction(this.id)">Vymazať</button>
+                            <button th:id="${item.id}" type="button" class="btn btn-primary disab" onclick="confirmFunction(this.id)">Vymazať</button>
                         </div>
                     </div>
                 </th:block>
@@ -126,6 +126,21 @@
     var individualItems = document.querySelectorAll(".individualItems");
     for (i = 0; i < individualItems.length; i++) {
         individualItems[i].style.margin = "10px 0 0 0";
+    }
+
+    var isEditable = document.querySelectorAll(".lockedSeason");
+    if (isEditable[0].id === 'true') {
+        console.log("Non-disable");
+    }
+    else {
+        var disableButtons = document.querySelectorAll(".disab");
+        console.log(disableButtons)
+        // $('button').prop('disabled', true);
+        for (j = 0; j < disableButtons.length; j++) {
+            console.log(disableButtons[j]);
+            disableButtons[j].disabled = true;
+        }
+        console.log("Disabling");
     }
 
     function addItem(clicked_id) {
@@ -179,10 +194,6 @@
         }
     }
 </script>
-
-
-
-
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
