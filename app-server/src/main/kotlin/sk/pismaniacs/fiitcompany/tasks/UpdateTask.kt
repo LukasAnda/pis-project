@@ -311,7 +311,7 @@ class UpdateTask {
 
     private fun updateItem(item: Item?, priceChange: Double) = when {
         priceChange > 10 -> {
-            //item?.let { requestItem(it) }
+            item?.let { requestItem(it) }
             Pair(item?.copy(price = item.price * 0.9), priceChange)
         }
         else -> Pair(item, priceChange)
