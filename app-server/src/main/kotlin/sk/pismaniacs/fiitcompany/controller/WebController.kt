@@ -80,17 +80,18 @@ class WebController {
 
     @RequestMapping("/addSeasonItem", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun addSeasonItem(model: Model, @RequestBody request: ModifyRequest): String {
-        itemRepository.findAllById(request.item_ids.map { it.toLong() }).map { it.copy(price = 0.9 * it.price, advertise = true) }.also { items ->
-            itemRepository.saveAll(items)
-            seasonRepository.findFirstByOrderByIdDesc().ifPresent {
-                if (it.actual && it.editable) {
-                    seasonRepository.save(it.copy(items = it.items + items))
-                }
-            }
-        }
 
         seasonRepository.findFirstByOrderByIdDesc().ifPresent {
             if (it.editable) {
+                itemRepository.findAllById(request.item_ids.map { it.toLong() }).map { it.copy(price = 0.9 * it.price, advertise = true) }.also { items ->
+                    itemRepository.saveAll(items)
+                    seasonRepository.findFirstByOrderByIdDesc().ifPresent {
+                        if (it.actual && it.editable) {
+                            seasonRepository.save(it.copy(items = it.items + items))
+                        }
+                    }
+                }
+
                 model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
                 model.addAttribute("otherItems", (itemRepository.findAll() - it.items).sortedBy { it.id })
             } else {
@@ -105,17 +106,19 @@ class WebController {
 
     @RequestMapping("/removeSeasonItem", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun removeSeasonItem(model: Model, @RequestBody request: ModifyRequest): String {
-        itemRepository.findAllById(request.item_ids.map { it.toLong() }).map { it.copy(price = 1.1111 * it.price, advertise = false) }.also { items ->
-            itemRepository.saveAll(items)
-            seasonRepository.findFirstByOrderByIdDesc().ifPresent {
-                if (it.actual && it.editable) {
-                    seasonRepository.save(it.copy(items = it.items - items))
-                }
-            }
-        }
 
         seasonRepository.findFirstByOrderByIdDesc().ifPresent {
             if (it.editable) {
+
+                itemRepository.findAllById(request.item_ids.map { it.toLong() }).map { it.copy(price = 1.1111 * it.price, advertise = false) }.also { items ->
+                    itemRepository.saveAll(items)
+                    seasonRepository.findFirstByOrderByIdDesc().ifPresent {
+                        if (it.actual && it.editable) {
+                            seasonRepository.save(it.copy(items = it.items - items))
+                        }
+                    }
+                }
+
                 model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
                 model.addAttribute("otherItems", (itemRepository.findAll() - it.items).sortedBy { it.id })
             } else {
