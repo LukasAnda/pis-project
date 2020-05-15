@@ -98,6 +98,7 @@ class WebController {
                 model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
                 model.addAttribute("otherItems", emptyList<Item>())
             }
+            model.addAttribute("isEditable", it.editable)
         }
 
 
@@ -125,6 +126,7 @@ class WebController {
                 model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
                 model.addAttribute("otherItems", emptyList<Item>())
             }
+            model.addAttribute("isEditable", it.editable)
         }
 
 
@@ -182,6 +184,7 @@ class WebController {
                 model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
                 model.addAttribute("otherItems", emptyList<Item>())
             }
+            model.addAttribute("isEditable", it.editable)
         }
         return "actualSeason"
     }
