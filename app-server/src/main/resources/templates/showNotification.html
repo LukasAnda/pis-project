@@ -52,7 +52,7 @@
             <div class="col-1 text-left">
                 <p>ID</p>
             </div>
-            <div class="col-6 text-left">
+            <div class="col-4 text-left">
                 <p>Názov produktu</p>
             </div>
             <div class="col-3 text-right">
@@ -64,6 +64,9 @@
             <div class="col-1 text-right">
                 <p>Uložiť</p>
             </div>
+            <div class="col-2 text-right">
+                <p>Zrušiť predaj</p>
+            </div>
         </div>
         <div class="products">
             <th:block th:each="report : ${items}">
@@ -71,7 +74,7 @@
                     <div class="col-1 text-left">
                         <p class="itemRow" th:utext="${report.item.id}">..</p>
                     </div>
-                    <div class="col-6 text-left">
+                    <div class="col-4 text-left">
                         <input type="text" class="form-control itemRow" id="InputName" aria-describedby="Name" placeholder="Enter name" th:value="${report.item.name}">
                     </div>
                     <div class="col-3 text-right">
@@ -82,6 +85,9 @@
                     </div>
                     <div class="col-1 text-right">
                          <button onclick="save(this.id, this.value)" th:value="${report.id}" type="button" th:id="${report.item.id}" class="btn btn-primary">Uložiť</button>
+                    </div>
+                    <div class="col-2 text-right">
+                        <button onclick="removeFromSelling(this.id, this.value)" th:value="${report.id}" type="button" th:id="${report.item.id}" class="btn btn-primary">Zrušiť predaj</button>
                     </div>
                 </div>
             </th:block>
@@ -171,6 +177,34 @@
                      console.log("DONE");
                  }
          });
+    }
+
+    function removeFromSelling(clicked_id, report_id) {
+        console.log(report_id);
+        var dataLoad = {
+            "item_ids" : [clicked_id],
+            "report_id" : [report_id]
+        }
+
+        console.log(dataLoad);
+
+        $.ajax({
+            type : "POST",
+            contentType : 'application/json; charset=utf-8',
+            dataType : 'text',
+            url : "http://localhost:8080/removeFromSelling",
+            data : JSON.stringify(dataLoad),
+            success : function(result) {
+                $("html").html(result);
+            },
+            error: function(e){
+                console.log("ERROR: ", e);
+                alert("Oops! Niečo sa nepodarilo, skúste znova!")
+            },
+            done : function(e) {
+                console.log("DONE");
+            }
+        });
     }
     
 </script>

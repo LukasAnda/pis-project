@@ -55,14 +55,14 @@
             <div class="col-1 text-left">
                 <p>ID</p>
             </div>
-            <div class="col-6 text-left">
+            <div class="col-5 text-left">
                 <p>Názov produktu</p>
             </div>
             <div class="col-3 text-right">
                 <p>Jednotková cena</p>
             </div>
-            <div class="col-1 text-center">
-                <p>Vymazať</p>
+            <div class="col-2 text-center">
+                <p>Zrušiť predaj</p>
             </div>
         </div>
         <div class="products">
@@ -74,13 +74,13 @@
                     <div class="col-1 text-left">
                         <p th:utext="${item.id}">..</p>
                     </div>
-                    <div class="col-6 text-left">
+                    <div class="col-5 text-left">
                         <p th:utext="${item.name}">..</p>
                     </div>
                     <div class="col-3 text-right">
                         <p th:utext="${item.price}">..</p>
                     </div>
-                    <div class="col-1 text-center">
+                    <div class="col-2 text-center">
                         <button th:id="${item.id}" type="submit" class="deleteBTN" onclick="confirmFunction(this.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
                     </div>
                 </div>
@@ -88,8 +88,8 @@
         </div>
         <div class="row buttons">
             <div class="col-12 text-right">
-                <button onclick="printChecked()" type="button" class="btn btn-primary">Editovať označené</button>
-                <button onclick="deleteSelected()" type="button" class="btn btn-primary">Vymazať označené</button>
+<!--                <button onclick="printChecked()" type="button" class="btn btn-primary">Editovať označené</button>-->
+                <button onclick="deleteSelected()" type="button" class="btn btn-primary">Zrušiť predaj označeným</button>
             </div>
         </div>
     </div>
@@ -141,7 +141,7 @@
         });
         console.log(a.length)
         if (a.length > 0) {
-            var r = confirm("Naozaj si prajete vymazať vybrané produkty?");
+            var r = confirm("Naozaj si prajete odstrániť z predaja vybrané produkty?");
              if (r == true) {
                 
                 var dataLoad = {
@@ -173,7 +173,7 @@
 
     function confirmFunction(clicked_id) {
       var txt;
-      var r = confirm("Naozaj si prajete vymazať vybraný produkt?");
+      var r = confirm("Naozaj si prajete odstrániť z predaja vybraný produkt?");
       if (r == true) {
         console.log(clicked_id);
         var dataLoad = {

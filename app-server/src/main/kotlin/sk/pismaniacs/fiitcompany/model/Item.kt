@@ -15,6 +15,7 @@ data class Item(
         @JsonIgnoreProperties("item")
         var purchases: List<Purchase> = emptyList(),
         var advertise: Boolean = false,
+        var isSelling: Boolean = true,
         @ManyToMany(mappedBy = "items")
         @JsonIgnoreProperties("items")
         var seasons: List<Season> = emptyList(),

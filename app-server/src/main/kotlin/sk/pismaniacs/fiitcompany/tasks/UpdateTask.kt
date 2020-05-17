@@ -107,7 +107,7 @@ class UpdateTask {
         sendInfoToClients()
 
         val lastSeason = seasonRepository.findFirstByOrderByIdDesc().orElseGet { Season() }.id ?: 0
-        itemRepository.findAll().shuffled().take(10).let {
+        itemRepository.findAll().filter { it.isSelling }.shuffled().take(10).let {
 
             ProductsRepository.getIdsToOrder().intersect(it.map { it.name }).forEach {
                 WsdlOrderRepository.orderItem(it, 100)
@@ -244,7 +244,7 @@ class UpdateTask {
                 Instant.ofEpochMilli(it.firstOrNull()?.dateOfPurchase
                         ?: System.currentTimeMillis()).atZone(ZoneId.systemDefault()).toLocalDate()
             }.let { date ->
-                val items = itemRepository.findAll().toList()
+                val items = itemRepository.findAll().toList().filter { it.isSelling }
 
                 items.map {
                     Purchase(

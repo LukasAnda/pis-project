@@ -7,13 +7,10 @@ import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.ui.ModelMap
 import org.springframework.web.bind.annotation.*
-import sk.pismaniacs.fiitcompany.repository.ItemRepository
-import sk.pismaniacs.fiitcompany.repository.NotificationRepository
-import sk.pismaniacs.fiitcompany.repository.OrderRepository
-import sk.pismaniacs.fiitcompany.repository.SeasonRepository
 import org.springframework.web.servlet.ModelAndView
 import sk.pismaniacs.fiitcompany.model.Item
 import sk.pismaniacs.fiitcompany.model.requests.*
+import sk.pismaniacs.fiitcompany.repository.*
 
 
 @Controller
@@ -34,21 +31,24 @@ class WebController {
     lateinit var notificationRepository: NotificationRepository
 
     @Autowired
+    lateinit var regularReportRepository: RegularReportRepository
+
+    @Autowired
     lateinit var seasonRepository: SeasonRepository
 
 
     @RequestMapping("/")
     fun index(model: Model): String {
         model.addAttribute("mode", appMode)
-        model.addAttribute("items", itemRepository.findAll().sortedBy { it.id })
+        model.addAttribute("items", itemRepository.findAll().filter { it.isSelling }.sortedBy { it.id })
         return "index"
     }
 
     @RequestMapping("/delete", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     @ResponseBody
     fun deleteItems(@RequestBody request: ModifyRequest): ModifyResponse {
-        request.item_ids.forEach {
-            itemRepository.deleteById(it.toLong())
+        itemRepository.findAllById(request.item_ids.map { it.toLong() }).map { it.copy(isSelling = false) }.let {
+            itemRepository.saveAll(it)
         }
         return ModifyResponse("OK")
     }
@@ -62,7 +62,7 @@ class WebController {
 
     @RequestMapping("/allProducts")
     fun getAllProducts(model: Model): String {
-        model.addAttribute("items", itemRepository.findAll().sortedBy { it.id })
+        model.addAttribute("items", itemRepository.findAll().filter { it.isSelling }.sortedBy { it.id })
         return "edit"
     }
 
@@ -93,7 +93,7 @@ class WebController {
                 }
 
                 model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
-                model.addAttribute("otherItems", (itemRepository.findAll() - it.items).sortedBy { it.id })
+                model.addAttribute("otherItems", (itemRepository.findAll().filter { it.isSelling } - it.items).sortedBy { it.id })
             } else {
                 model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
                 model.addAttribute("otherItems", emptyList<Item>())
@@ -121,7 +121,7 @@ class WebController {
                 }
 
                 model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
-                model.addAttribute("otherItems", (itemRepository.findAll() - it.items).sortedBy { it.id })
+                model.addAttribute("otherItems", (itemRepository.findAll().filter { it.isSelling } - it.items).sortedBy { it.id })
             } else {
                 model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
                 model.addAttribute("otherItems", emptyList<Item>())
@@ -137,11 +137,11 @@ class WebController {
     fun saveItem(model: Model, @RequestBody request: ModifyRequest3): String {
         val items = itemRepository.findAllById(listOf(request.item_ids.id.toLong()) )
         items.map { item ->
-            item.copy(name = request.item_ids.name
-                    ?: "", price = request.item_ids.price.toDouble() ?: 0.0)
+            item.copy(name = request.item_ids.name, price = request.item_ids.price.toDouble())
         }.also {
             itemRepository.saveAll(it)
         }
+
         val requestId = request.report_id.first().toLong()
         val reports = notificationRepository.findAll()
                 .filter { it.regularReports.isNotEmpty() }
@@ -149,6 +149,9 @@ class WebController {
                 .filter {
                     it.map { it.id }.filterNotNull().contains(requestId)
                 }.flatten()
+                .filter { it.id != requestId }
+
+        regularReportRepository.deleteById(requestId)
 
         model.addAttribute("items", reports.sortedBy { it.id })
         return "showNotification"
@@ -174,12 +177,34 @@ class WebController {
         return "showNotification"
     }
 
+    @RequestMapping("/removeFromSelling", method = arrayOf(RequestMethod.POST), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun removeFromSelling(model: Model, @RequestBody request: ModifyRequest4): String {
+        val items = itemRepository.findAllById(request.item_ids.map { it.toLong() })
+        items.map { item -> item.copy(isSelling = false) }.also {
+            itemRepository.saveAll(it)
+        }
+
+        val requestId = request.report_id.first().toLong()
+        val reports = notificationRepository.findAll()
+                .filter { it.regularReports.isNotEmpty() }
+                .map { it.regularReports }
+                .filter {
+                    it.map { it.id }.filterNotNull().contains(requestId)
+                }.flatten()
+                .filter { it.id != requestId }
+
+        regularReportRepository.deleteById(requestId)
+
+        model.addAttribute("items", reports.sortedBy { it.id })
+        return "showNotification"
+    }
+
     @RequestMapping("/actualSeason")
     fun getActualSeason(model: Model): String {
         seasonRepository.findFirstByOrderByIdDesc().ifPresent {
             if (it.editable) {
                 model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
-                model.addAttribute("otherItems", (itemRepository.findAll() - it.items).sortedBy { it.id })
+                model.addAttribute("otherItems", (itemRepository.findAll().filter { it.isSelling } - it.items).sortedBy { it.id })
             } else {
                 model.addAttribute("seasonalItems", it.items.sortedBy { it.id })
                 model.addAttribute("otherItems", emptyList<Item>())
