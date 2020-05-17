@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions name="Team022kontrolaStavu" targetNamespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu" xmlns:tns="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu/types">
+<definitions name="Team022produkt" targetNamespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt" xmlns:tns="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt/types">
     <types>
-        <xsd:schema targetNamespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu/types" xmlns="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu/types">
+        <xsd:schema targetNamespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt/types" xmlns="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt/types">
             <xsd:complexType name="getById">
                 <xsd:sequence>
                     <xsd:element name="id" type="xsd:int"/>
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:element name="getById" nillable="true" type="ns:getById"/>
-            <xsd:complexType name="Kontrolastavu">
+            <xsd:complexType name="Produkt">
                 <xsd:sequence>
                     <xsd:element name="id" type="xsd:int"/>
                     <xsd:element name="name" type="xsd:string"/>
-                    <xsd:element name="datum" type="xsd:dateTime"/>
+                    <xsd:element name="pocetNaSklade" type="xsd:int"/>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:element name="Kontrolastavu" nillable="true" type="ns:Kontrolastavu"/>
+            <xsd:element name="Produkt" nillable="true" type="ns:Produkt"/>
             <xsd:complexType name="getByIdResponse">
                 <xsd:sequence>
-                    <xsd:element name="kontrolastavu" type="Kontrolastavu"/>
+                    <xsd:element name="produkt" type="Produkt"/>
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:element name="getByIdResponse" nillable="true" type="ns:getByIdResponse"/>
@@ -35,22 +35,22 @@
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:element name="getByAttributeValue" nillable="true" type="ns:getByAttributeValue"/>
-            <xsd:complexType name="ArrayOfKontrolastavus">
+            <xsd:complexType name="ArrayOfProdukts">
                 <xsd:sequence>
-                    <xsd:element minOccurs="0" maxOccurs="unbounded" name="kontrolastavu" nillable="true" type="ns:Kontrolastavus"/>
+                    <xsd:element minOccurs="0" maxOccurs="unbounded" name="produkt" nillable="true" type="ns:Produkts"/>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:complexType name="Kontrolastavus">
+            <xsd:complexType name="Produkts">
                 <xsd:sequence>
                     <xsd:element name="id" type="xsd:int"/>
                     <xsd:element name="name" type="xsd:string"/>
-                    <xsd:element name="datum" type="xsd:dateTime"/>
+                    <xsd:element name="pocetNaSklade" type="xsd:int"/>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:element name="Kontrolastavus" nillable="true" type="ns:Kontrolastavus"/>
+            <xsd:element name="Produkts" nillable="true" type="ns:Produkts"/>
             <xsd:complexType name="getByAttributeValueResponse">
                 <xsd:sequence>
-                    <xsd:element name="kontrolastavus" type="ns:ArrayOfKontrolastavus"/>
+                    <xsd:element name="produkts" type="ns:ArrayOfProdukts"/>
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:element name="getByAttributeValueResponse" nillable="true" type="ns:getByAttributeValueResponse"/>
@@ -65,7 +65,7 @@
             <xsd:element name="getByNumericCondition" nillable="true" type="ns:getByNumericCondition"/>
             <xsd:complexType name="getByNumericConditionResponse">
                 <xsd:sequence>
-                    <xsd:element name="kontrolastavus" type="ns:ArrayOfKontrolastavus"/>
+                    <xsd:element name="produkts" type="ns:ArrayOfProdukts"/>
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:element name="getByNumericConditionResponse" nillable="true" type="ns:getByNumericConditionResponse"/>
@@ -75,22 +75,15 @@
             <xsd:element name="getAll" nillable="true" type="ns:getAll"/>
             <xsd:complexType name="getAllResponse">
                 <xsd:sequence>
-                    <xsd:element name="kontrolastavus" type="ns:ArrayOfKontrolastavus"/>
+                    <xsd:element name="produkts" type="ns:ArrayOfProdukts"/>
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:element name="getAllResponse" nillable="true" type="ns:getAllResponse"/>
-            <xsd:complexType name="KontrolaStavu">
-                <xsd:sequence>
-                    <xsd:element name="name" type="xsd:string"/>
-                    <xsd:element name="datum" type="xsd:dateTime"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:element name="KontrolaStavu" nillable="true" type="ns:KontrolaStavu"/>
             <xsd:complexType name="insert">
                 <xsd:sequence>
                     <xsd:element name="team_id" type="xsd:string"/>
                     <xsd:element name="team_password" type="xsd:string"/>
-                    <xsd:element name="kontrolaStavu" type="KontrolaStavu"/>
+                    <xsd:element name="produkt" type="Produkt"/>
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:element name="insert" nillable="true" type="ns:insert"/>
@@ -105,7 +98,7 @@
                     <xsd:element name="team_id" type="xsd:string"/>
                     <xsd:element name="team_password" type="xsd:string"/>
                     <xsd:element name="entity_id" type="xsd:int"/>
-                    <xsd:element name="kontrolaStavu" type="KontrolaStavu"/>
+                    <xsd:element name="produkt" type="Produkt"/>
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:element name="update" nillable="true" type="ns:update"/>
@@ -173,7 +166,7 @@
     <message name="deleteResponse">
         <part name="parameters" element="ns:deleteResponse"/>
     </message>
-    <portType name="Team022kontrolaStavuPortType">
+    <portType name="Team022produktPortType">
         <operation name="getById">
             <input message="tns:getByIdRequest"/>
             <output message="tns:getByIdResponse"/>
@@ -203,75 +196,75 @@
             <output message="tns:deleteResponse"/>
         </operation>
     </portType>
-    <binding name="Team022kontrolaStavuBinding" type="tns:Team022kontrolaStavuPortType">
+    <binding name="Team022produktBinding" type="tns:Team022produktPortType">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="getById">
-            <soap:operation soapAction="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu/#getById"/>
+            <soap:operation soapAction="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt/#getById"/>
             <input>
-                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu"/>
+                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt"/>
             </input>
             <output>
-                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu"/>
+                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt"/>
             </output>
         </operation>
         <operation name="getByAttributeValue">
-            <soap:operation soapAction="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu/#getByAttributeValue"/>
+            <soap:operation soapAction="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt/#getByAttributeValue"/>
             <input>
-                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu"/>
+                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt"/>
             </input>
             <output>
-                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu"/>
+                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt"/>
             </output>
         </operation>
         <operation name="getByNumericCondition">
-            <soap:operation soapAction="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu/#getByNumericCondition"/>
+            <soap:operation soapAction="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt/#getByNumericCondition"/>
             <input>
-                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu"/>
+                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt"/>
             </input>
             <output>
-                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu"/>
+                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt"/>
             </output>
         </operation>
         <operation name="getAll">
-            <soap:operation soapAction="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu/#getAll"/>
+            <soap:operation soapAction="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt/#getAll"/>
             <input>
-                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu"/>
+                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt"/>
             </input>
             <output>
-                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu"/>
+                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt"/>
             </output>
         </operation>
         <operation name="insert">
-            <soap:operation soapAction="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu/#insert"/>
+            <soap:operation soapAction="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt/#insert"/>
             <input>
-                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu"/>
+                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt"/>
             </input>
             <output>
-                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu"/>
+                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt"/>
             </output>
         </operation>
         <operation name="update">
-            <soap:operation soapAction="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu/#update"/>
+            <soap:operation soapAction="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt/#update"/>
             <input>
-                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu"/>
+                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt"/>
             </input>
             <output>
-                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu"/>
+                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt"/>
             </output>
         </operation>
         <operation name="delete">
-            <soap:operation soapAction="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu/#delete"/>
+            <soap:operation soapAction="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt/#delete"/>
             <input>
-                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu"/>
+                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt"/>
             </input>
             <output>
-                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022kontrolastavu"/>
+                <soap:body use="literal" namespace="http://pis.predmety.fiit.stuba.sk/pis/students/team022produkt"/>
             </output>
         </operation>
     </binding>
-    <service name="Team022kontrolaStavuService">
-        <port name="Team022kontrolaStavuPort" binding="tns:Team022kontrolaStavuBinding">
-            <soap:address location="http://pis.predmety.fiit.stuba.sk/pis/ws/Students/Team022kontrolaStavu"/>
+    <service name="Team022produktService">
+        <port name="Team022produktPort" binding="tns:Team022produktBinding">
+            <soap:address location="http://pis.predmety.fiit.stuba.sk/pis/ws/Students/Team022produkt"/>
         </port>
     </service>
 </definitions>

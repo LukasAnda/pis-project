@@ -5,22 +5,19 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import sk.pismaniacs.fiitcompany.model.*
 import sk.pismaniacs.fiitcompany.repository.*
-import sk.stuba.fiit.predmety.pis.pis.notificationservices.email.EmailService
-import sk.stuba.fiit.predmety.pis.pis.notificationservices.email.types.Notify
-import sk.stuba.fiit.predmety.pis.pis.notificationservices.mail.MailService
-import sk.stuba.fiit.predmety.pis.pis.notificationservices.sms.SMSService
-import sk.stuba.fiit.predmety.pis.pis.students.team022kontrolastavu.Team022KontrolaStavuService
-import sk.stuba.fiit.predmety.pis.pis.students.team022kontrolastavu.types.Insert
-import sk.stuba.fiit.predmety.pis.pis.students.team022kontrolastavu.types.KontrolaStavu2
+import sk.pismaniacs.fiitcompany.wsdl.EmailRepository
+import sk.pismaniacs.fiitcompany.wsdl.MailRepository
+import sk.pismaniacs.fiitcompany.wsdl.ProductsRepository
+import sk.pismaniacs.fiitcompany.wsdl.SmsRepository
 import sk.stuba.fiit.predmety.pis.pis.students.team022objednavka.Team022ObjednavkaService
 import sk.stuba.fiit.predmety.pis.pis.students.team022objednavka.types.Objednavka
+import sk.stuba.fiit.predmety.pis.pis.students.team022produkt.Team022ProduktService
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
 import javax.annotation.PostConstruct
-import javax.xml.datatype.DatatypeFactory
-import javax.xml.datatype.XMLGregorianCalendar
 import kotlin.random.Random
+import sk.pismaniacs.fiitcompany.wsdl.OrderRepository as WsdlOrderRepository
 
 
 @Component
@@ -46,10 +43,7 @@ class UpdateTask {
     @Autowired
     lateinit var seasonalPriceReportRepository: SeasonalPriceReportRepository
 
-    private val emailPort = EmailService().emailPort
-    private var mailPort = MailService().mailPort
-    private var smsPort = SMSService().smsPort
-    private var kontrolaStavuPort = Team022KontrolaStavuService().team022KontrolaStavuPort
+    private var produktyPort = Team022ProduktService().team022ProduktPort
     private var objednavkaPort = Team022ObjednavkaService().team022ObjednavkaPort
 
 
@@ -66,6 +60,8 @@ class UpdateTask {
 
         generateNextWeekTransactions()
         generateNextWeekTransactions()
+
+        ProductsRepository.insertProducts(itemRepository.findAll().toList())
 
     }
 
@@ -88,6 +84,7 @@ class UpdateTask {
         if (counter divisible 3) {
             println("Update prices")
             updatePricesTask()
+            updateProductPrices()
         }
 
         counter++
@@ -108,10 +105,13 @@ class UpdateTask {
         }
 
         sendInfoToClients()
-        check()
 
         val lastSeason = seasonRepository.findFirstByOrderByIdDesc().orElseGet { Season() }.id ?: 0
         itemRepository.findAll().shuffled().take(10).let {
+
+            ProductsRepository.getIdsToOrder().intersect(it.map { it.name }).forEach {
+                WsdlOrderRepository.orderItem(it, 100)
+            }
 
             it.map { it.copy(price = 0.9 * it.price, advertise = true) }.let {
                 itemRepository.saveAll(it)
@@ -225,69 +225,17 @@ class UpdateTask {
     }
 
     private fun sendInfoToClients() {
-        val emailResponse = emailPort.notify(Notify().apply {
-            email = "lukas.anda@gmail.com"
-            subject = "New Season"
-            message = "Hey, new season arrived"
-            teamId = "022"
-            password = "Y6ZSLR"
-        })
-        if (emailResponse.isSuccess) {
-            println("Email sent!!!")
-        } else {
-            println("Email failed!!!")
-        }
-        val mailResponse = mailPort.notify(sk.stuba.fiit.predmety.pis.pis.notificationservices.mail.types.Notify().apply {
-            address = "Ilkovicova 2"
-            subject = "New Season"
-            message = "Hey, new season arrived"
-            teamId = "022"
-            password = "Y6ZSLR"
-        })
-        if (mailResponse.isSuccess) {
-            println("Mail sent!!!")
-        } else {
-            println("Mail failed!!!")
-        }
-        val smsResponse = smsPort.notify(sk.stuba.fiit.predmety.pis.pis.notificationservices.sms.types.Notify().apply {
-            phone = "0918999000"
-            subject = "New Season"
-            message = "Hey, new season arrived"
-            teamId = "022"
-            password = "Y6ZSLR"
-        })
-
-        if (smsResponse.isSuccess) {
-            println("Sms sent!!!")
-        } else {
-            println("Sms failed!!!")
-        }
+        EmailRepository.sendEmail()
+        MailRepository.sendMail()
+        SmsRepository.sendSms()
     }
 
-    private fun check() {
-        val response = kontrolaStavuPort.insert(Insert().apply {
-            teamId = "022"
-            teamPassword = "Y6ZSLR"
-            kontrolaStavu = KontrolaStavu2().apply {
-                name = "Nova kontrola stavu"
-                datum = DatatypeFactory.newInstance().newXMLGregorianCalendar()
-            }
-        })
-
-        println("New check has id: ${response.id}")
+    private fun updateProductPrices() {
+        ProductsRepository.updateProductQuantities()
     }
 
     private fun requestItem(item: Item) {
-        val response = objednavkaPort.insert(sk.stuba.fiit.predmety.pis.pis.students.team022objednavka.types.Insert().apply {
-            teamId = "022"
-            teamPassword = "Y6ZSLR"
-            objednavka = Objednavka().apply {
-                name = item.name
-                pocet = (item.purchases.sortedByDescending { it.dateOfPurchase }.firstOrNull()?.quantity ?: 0) / 2
-            }
-        })
-
-        println("New request has id: ${response.id}")
+        WsdlOrderRepository.orderItem(item.name, (item.purchases.sortedByDescending { it.dateOfPurchase }.firstOrNull()?.quantity ?: 0) / 2)
     }
 
     private fun generateNextWeekTransactions() = orderRepository.findAll()
